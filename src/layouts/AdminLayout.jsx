@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
@@ -7,7 +7,8 @@ import { clearWishlistState } from '../redux/slices/wishlistSlice';
 import { Toaster } from 'react-hot-toast';
 import { 
   FiGrid, FiPackage, FiFolder, FiShoppingBag, FiUsers, 
-  FiMessageSquare, FiImage, FiSettings, FiExternalLink, FiLogOut 
+  FiMessageSquare, FiImage, FiSettings, FiExternalLink, FiLogOut,
+  FiMenu, FiX
 } from 'react-icons/fi';
 
 const AdminLayout = () => {
@@ -15,6 +16,7 @@ const AdminLayout = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -54,15 +56,31 @@ const AdminLayout = () => {
         }}
       />
 
+      {/* Sidebar Overlay for Mobile */}
+      {isSidebarOpen && (
+        <div 
+          onClick={() => setIsSidebarOpen(false)} 
+          className="fixed inset-0 bg-black/60 z-30 lg:hidden backdrop-blur-sm"
+        />
+      )}
+
       {/* Admin Sidebar */}
-      <aside className="w-64 bg-luxury-black text-luxury-white flex flex-col justify-between border-r border-luxury-gold/20 z-20">
+      <aside className={`fixed inset-y-0 left-0 lg:static w-64 bg-luxury-black text-luxury-white flex flex-col justify-between border-r border-luxury-gold/20 z-40 transform transition-transform duration-300 ease-in-out ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      }`}>
         <div>
           {/* Header/Brand */}
-          <div className="p-6 border-b border-luxury-gold/10">
-            <Link to="/" className="block">
+          <div className="p-6 border-b border-luxury-gold/10 flex justify-between items-center">
+            <Link to="/" className="block" onClick={() => setIsSidebarOpen(false)}>
               <span className="font-serif text-lg font-semibold tracking-luxury text-luxury-gold uppercase">NKYLUXURY</span>
             </Link>
-            <span className="text-[9px] font-sans tracking-widest text-luxury-gray uppercase block mt-1">Admin Management</span>
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="lg:hidden p-1 text-luxury-gray hover:text-white transition-colors cursor-pointer"
+              aria-label="Close sidebar"
+            >
+              <FiX className="text-lg" />
+            </button>
           </div>
 
           {/* Navigation Links */}
@@ -73,6 +91,7 @@ const AdminLayout = () => {
                 <Link
                   key={item.name}
                   to={item.path}
+                  onClick={() => setIsSidebarOpen(false)}
                   className={`flex items-center space-x-3 px-4 py-3 text-xs uppercase tracking-widest transition-all duration-200 ${
                     isActive
                       ? 'bg-luxury-gold text-luxury-black font-semibold'
@@ -91,6 +110,7 @@ const AdminLayout = () => {
         <div className="p-4 border-t border-luxury-gold/10 space-y-1">
           <Link
             to="/"
+            onClick={() => setIsSidebarOpen(false)}
             className="flex items-center space-x-3 px-4 py-3 text-xs uppercase tracking-widest hover:bg-luxury-gold/10 hover:text-luxury-gold transition-colors text-luxury-gray"
           >
             <FiExternalLink />
@@ -109,19 +129,28 @@ const AdminLayout = () => {
       {/* Main Content Dashboard */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navbar */}
-        <header className="h-16 bg-luxury-black border-b border-luxury-gold/20 flex justify-between items-center px-8 text-luxury-white">
-          <h1 className="font-serif text-lg text-luxury-gold tracking-wide">
-            {menuItems.find(item => item.path === location.pathname)?.name || 'Portal'}
-          </h1>
+        <header className="h-16 bg-luxury-black border-b border-luxury-gold/20 flex justify-between items-center px-6 lg:px-8 text-luxury-white">
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden p-1.5 text-luxury-gold hover:text-white transition-colors cursor-pointer"
+              aria-label="Open sidebar"
+            >
+              <FiMenu className="text-xl" />
+            </button>
+            <h1 className="font-serif text-sm lg:text-lg text-luxury-gold tracking-wide">
+              {menuItems.find(item => item.path === location.pathname)?.name || 'Portal'}
+            </h1>
+          </div>
           <div className="flex items-center space-x-4">
-            <span className="font-sans text-xs uppercase tracking-widest text-luxury-gray">
+            <span className="font-sans text-xs uppercase tracking-widest text-luxury-gray hidden sm:inline">
               Greetings, <strong className="text-luxury-gold">{user?.name}</strong>
             </span>
           </div>
         </header>
 
         {/* Main Scrolling Container */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto p-8">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 lg:p-8">
           <Outlet />
         </main>
       </div>
