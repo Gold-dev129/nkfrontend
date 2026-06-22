@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Prevent search engine crawlers from indexing admin and private areas
+Disallow: /admin/
+Disallow: /checkout/
+Disallow: /dashboard/
+
+Sitemap: https://nkyluxury.com/sitemap.xml

@@ -1,0 +1,107 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-luxury-black: #0F172A;
+  --color-luxury-gold: #475569;
+  --color-luxury-goldlight: #E2E8F0;
+  --color-luxury-golddark: #1E293B;
+  --color-luxury-cream: #FFFFFF;
+  --color-luxury-darkcream: #F1F5F9;
+  --color-luxury-white: #FFFFFF;
+  --color-luxury-darkgray: #0F172A;
+  --color-luxury-mediumgray: #1E293B;
+  --color-luxury-gray: #64748B;
+  --color-luxury-lightgray: #F8FAFC;
+
+  --font-serif: "Inter", sans-serif;
+  --font-sans: "Inter", sans-serif;
+
+  --tracking-widest: 0.15em;
+  --tracking-luxury: 0.2em;
+}
+
+@layer base {
+  body {
+    @apply bg-luxury-cream text-luxury-black font-sans antialiased overflow-x-hidden;
+    background-color: #FFFFFF;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+  }
+}
+
+/* Minimalist CSS Utilities */
+.luxury-gradient {
+  background: #0F172A;
+}
+
+.luxury-border {
+  border-color: #E2E8F0;
+}
+
+.luxury-border-hover:hover {
+  border-color: #94A3B8;
+}
+
+.text-gold-gradient {
+  color: #0F172A;
+}
+
+/* Minimal Glassmorphism Panel */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #E2E8F0;
+}
+
+.glass-effect-dark {
+  background: #0F172A;
+  border: 1px solid #334155;
+}
+
+/* Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Custom transitions and skeleton styles */
+.zoom-container {
+  overflow: hidden;
+}
+
+.zoom-image {
+  transition: transform 0.4s ease-out;
+}
+
+.zoom-container:hover .zoom-image {
+  transform: scale(1.03);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #F1F5F9 25%, #F8FAFC 50%, #F1F5F9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
