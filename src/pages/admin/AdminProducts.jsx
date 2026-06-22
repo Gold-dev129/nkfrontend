@@ -25,6 +25,8 @@ const AdminProducts = () => {
   const [bestSeller, setBestSeller] = useState(false);
   const [newArrival, setNewArrival] = useState(false);
   const [video, setVideo] = useState('');
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
   const [isCustom, setIsCustom] = useState(false);
   
   // Image states
@@ -77,6 +79,8 @@ const AdminProducts = () => {
     setBestSeller(false);
     setNewArrival(true);
     setVideo('');
+    setVideoFile(null);
+    setVideoPreview(null);
     setIsCustom(false);
     setSelectedFiles([]);
     setExistingImages([]);
@@ -101,6 +105,8 @@ const AdminProducts = () => {
     setBestSeller(prod.bestSeller);
     setNewArrival(prod.newArrival);
     setVideo(prod.video || '');
+    setVideoFile(null);
+    setVideoPreview(prod.video || null);
     setIsCustom(prod.isCustom || false);
     setSelectedFiles([]);
     setExistingImages(prod.images || []);
@@ -150,6 +156,9 @@ const AdminProducts = () => {
     formData.append('newArrival', newArrival);
     formData.append('video', video);
     formData.append('isCustom', isCustom);
+    if (videoFile) {
+      formData.append('videoFile', videoFile);
+    }
     
     // Add file objects
     selectedFiles.forEach((file) => {
@@ -353,15 +362,57 @@ const AdminProducts = () => {
                 ></textarea>
               </div>
 
-              <div>
-                <label className="block text-luxury-gray font-semibold mb-2">Video URL (direct MP4 link, YouTube, or Vimeo)</label>
-                <input
-                  type="url"
-                  value={video}
-                  onChange={(e) => setVideo(e.target.value)}
-                  className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none"
-                  placeholder="e.g. https://res.cloudinary.com/... or https://youtube.com/watch?v=..."
-                />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-luxury-gray font-semibold mb-2">Video URL (direct link or external player URL)</label>
+                  <input
+                    type="url"
+                    value={video}
+                    onChange={(e) => setVideo(e.target.value)}
+                    className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none text-slate-900"
+                    placeholder="e.g. https://youtube.com/watch?v=..."
+                    disabled={videoFile !== null}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-luxury-gray font-semibold mb-2">Or Upload Direct Product Video (Max 25MB)</label>
+                  <div className="flex gap-4 items-center">
+                    <input
+                      type="file"
+                      accept="video/*"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          if (file.size > 25 * 1024 * 1024) {
+                            toast.error('Video must be under 25MB');
+                            return;
+                          }
+                          setVideoFile(file);
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setVideoPreview(reader.result);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="text-[10px] text-luxury-gray cursor-pointer"
+                    />
+                    
+                    {videoPreview && (
+                      <div className="relative h-14 w-20 border border-luxury-gold/20 bg-slate-50 flex items-center justify-center overflow-hidden">
+                        <video src={videoPreview} controls={false} className="h-full w-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => { setVideoFile(null); setVideoPreview(null); }}
+                          className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full p-0.5 text-[8px] cursor-pointer"
+                        >
+                          <FiX />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Images uploads */}
