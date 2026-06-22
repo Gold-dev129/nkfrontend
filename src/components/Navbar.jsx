@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
 import { clearCartState } from '../redux/slices/cartSlice';
 import { clearWishlistState } from '../redux/slices/wishlistSlice';
-import { setCurrency } from '../redux/slices/currencySlice';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiShoppingBag, FiHeart, FiUser, FiMenu, FiX, FiLogOut, FiSettings } from 'react-icons/fi';
 
@@ -20,7 +20,7 @@ const Navbar = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
-  const { currentCurrency } = useSelector((state) => state.currency);
+
 
   const cartCount = cart?.items?.reduce((acc, item) => acc + item.quantity, 0) || 0;
   const wishlistCount = wishlist?.products?.length || 0;
@@ -102,25 +102,7 @@ const Navbar = () => {
 
         {/* Action Icons */}
         <div className="flex items-center space-x-5 text-slate-800">
-          {/* Currency Toggle */}
-          <div className="hidden sm:flex items-center border border-luxury-gold/20 rounded overflow-hidden bg-white text-[9px] font-sans font-bold shadow-sm">
-            <button
-              onClick={() => dispatch(setCurrency('NGN'))}
-              className={`px-2 py-1 transition-all cursor-pointer ${
-                currentCurrency === 'NGN' ? 'bg-luxury-black text-white' : 'text-luxury-black hover:bg-slate-50'
-              }`}
-            >
-              ₦ NGN
-            </button>
-            <button
-              onClick={() => dispatch(setCurrency('USD'))}
-              className={`px-2 py-1 transition-all cursor-pointer ${
-                currentCurrency === 'USD' ? 'bg-luxury-black text-white' : 'text-luxury-black hover:bg-slate-50'
-              }`}
-            >
-              $ USD
-            </button>
-          </div>
+
 
           {/* Wishlist */}
           <Link
@@ -261,25 +243,7 @@ const Navbar = () => {
                 </Link>
               )}
 
-              {/* Mobile Currency Switcher */}
-              <div className="flex items-center border border-luxury-gold/20 rounded overflow-hidden bg-white text-[9px] font-sans font-bold w-fit mt-2">
-                <button
-                  onClick={() => dispatch(setCurrency('NGN'))}
-                  className={`px-3 py-1.5 transition-all cursor-pointer ${
-                    currentCurrency === 'NGN' ? 'bg-luxury-black text-white' : 'text-luxury-black'
-                  }`}
-                >
-                  ₦ NGN
-                </button>
-                <button
-                  onClick={() => dispatch(setCurrency('USD'))}
-                  className={`px-3 py-1.5 transition-all cursor-pointer ${
-                    currentCurrency === 'USD' ? 'bg-luxury-black text-white' : 'text-luxury-black'
-                  }`}
-                >
-                  $ USD
-                </button>
-              </div>
+
             </div>
           </motion.div>
         )}
