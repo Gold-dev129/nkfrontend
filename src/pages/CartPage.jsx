@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import api, { getImageUrl } from '../utils/api';
@@ -91,8 +91,63 @@ const CartPage = () => {
   };
 
   const subtotal = calculateSubtotal();
+
+  // Coupon promo code states & handlers
+  const [couponCodeInput, setCouponCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
+
+  useEffect(() => {
+    const saved = sessionStorage.getItem('applied_coupon');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        revalidateCoupon(parsed.code);
+      } catch (e) {
+        sessionStorage.removeItem('applied_coupon');
+      }
+    }
+  }, [subtotal]);
+
+  const revalidateCoupon = async (code) => {
+    if (!code) return;
+    try {
+      const response = await api.post('/coupons/validate', { code, subtotal });
+      setAppliedCoupon(response.data);
+      setCouponCodeInput(response.data.code);
+      sessionStorage.setItem('applied_coupon', JSON.stringify(response.data));
+    } catch (err) {
+      sessionStorage.removeItem('applied_coupon');
+      setAppliedCoupon(null);
+    }
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCodeInput) return;
+    setValidatingCoupon(true);
+    try {
+      const response = await api.post('/coupons/validate', { code: couponCodeInput, subtotal });
+      setAppliedCoupon(response.data);
+      sessionStorage.setItem('applied_coupon', JSON.stringify(response.data));
+      toast.success('Coupon applied successfully!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Invalid or expired coupon code');
+      setAppliedCoupon(null);
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    sessionStorage.removeItem('applied_coupon');
+    setAppliedCoupon(null);
+    setCouponCodeInput('');
+    toast.success('Coupon removed');
+  };
+
   const shippingFee = 0;
-  const grandTotal = subtotal;
+  const discountAmount = appliedCoupon ? appliedCoupon.discountCalculated : 0;
+  const grandTotal = subtotal - discountAmount;
 
   // Guest cart is supported, no redirect needed here.
 
@@ -212,11 +267,52 @@ const CartPage = () => {
                 <span>Subtotal</span>
                 <span className="text-luxury-black font-bold">{formatPrice(subtotal, currentCurrency, exchangeRate)}</span>
               </div>
+              
+              {appliedCoupon && (
+                <div className="flex justify-between text-green-700 font-semibold">
+                  <span>Discount ({appliedCoupon.code})</span>
+                  <span>-{formatPrice(appliedCoupon.discountCalculated, currentCurrency, exchangeRate)}</span>
+                </div>
+              )}
+              
               <div className="flex justify-between text-luxury-gray items-center font-semibold">
                 <span>Delivery Fee</span>
                 <span className="text-[9px] bg-slate-100 text-slate-700 px-2 py-0.5 border border-slate-200/50 uppercase font-bold tracking-wider font-mono">Paid on Delivery</span>
               </div>
               
+              {/* Promo Code Input */}
+              <div className="border-t border-luxury-gold/10 pt-4 space-y-2">
+                <label className="block text-[9px] uppercase tracking-wider font-semibold text-luxury-gray">Promo / Coupon Code</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="ENTER CODE"
+                    value={couponCodeInput}
+                    onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase().trim())}
+                    disabled={appliedCoupon !== null}
+                    className="w-full bg-slate-50 border border-slate-200 px-3 py-2 uppercase font-semibold focus:outline-none focus:border-luxury-gold disabled:opacity-50 text-slate-800 text-[11px]"
+                  />
+                  {appliedCoupon ? (
+                    <button
+                      onClick={handleRemoveCoupon}
+                      type="button"
+                      className="bg-red-50 text-red-700 border border-red-200 px-3 py-2 hover:bg-red-700 hover:text-white transition-colors font-bold uppercase tracking-wider text-[9px] cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleApplyCoupon}
+                      type="button"
+                      disabled={validatingCoupon || !couponCodeInput}
+                      className="bg-luxury-black text-white hover:bg-luxury-gold hover:text-luxury-black border border-luxury-gold px-4 py-2 transition-all font-bold uppercase tracking-wider text-[9px] cursor-pointer disabled:bg-slate-300 disabled:border-slate-300 disabled:text-slate-500"
+                    >
+                      {validatingCoupon ? '...' : 'Apply'}
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <hr className="border-luxury-gold/10" />
               
               <div className="flex justify-between text-luxury-black font-semibold text-sm">

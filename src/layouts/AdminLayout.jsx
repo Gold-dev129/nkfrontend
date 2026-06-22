@@ -8,7 +8,7 @@ import { Toaster } from 'react-hot-toast';
 import { 
   FiGrid, FiPackage, FiFolder, FiShoppingBag, FiUsers, 
   FiMessageSquare, FiImage, FiSettings, FiExternalLink, FiLogOut,
-  FiMenu, FiX
+  FiMenu, FiX, FiTag, FiEdit
 } from 'react-icons/fi';
 
 const AdminLayout = () => {
@@ -31,6 +31,8 @@ const AdminLayout = () => {
     { name: 'Categories', path: '/admin/categories', icon: <FiFolder /> },
     { name: 'Orders', path: '/admin/orders', icon: <FiShoppingBag /> },
     { name: 'Customers', path: '/admin/customers', icon: <FiUsers /> },
+    { name: 'Bespoke Inquiries', path: '/admin/custom-inquiries', icon: <FiEdit /> },
+    { name: 'Coupons', path: '/admin/coupons', icon: <FiTag /> },
     { name: 'Reviews', path: '/admin/reviews', icon: <FiMessageSquare /> },
     { name: 'Banners', path: '/admin/banners', icon: <FiImage /> },
     { name: 'Settings', path: '/admin/settings', icon: <FiSettings /> }

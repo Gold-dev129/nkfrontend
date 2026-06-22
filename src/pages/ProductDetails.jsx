@@ -468,7 +468,7 @@ const ProductDetails = () => {
               <div className="flex gap-4">
                 <a
                   href={`https://wa.me/2347051530996?text=${encodeURIComponent(
-                    `Hello NKYLUXURY, I would like to place a custom order for the "${product.name}" (SKU: ${product.sku}). Let's discuss details and pricing.`
+                    'Hello NKYLUXURY Private Concierge, I would like to inquire about fine jewelry designs and custom pieces.'
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -528,7 +528,7 @@ const ProductDetails = () => {
 
                 <a
                   href={`https://wa.me/2347051530996?text=${encodeURIComponent(
-                    `Hello NKYLUXURY, I am inquiring about the "${product.name}" (SKU: ${product.sku}). Is it currently available for custom orders/delivery?`
+                    'Hello NKYLUXURY Private Concierge, I would like to inquire about fine jewelry designs and custom pieces.'
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

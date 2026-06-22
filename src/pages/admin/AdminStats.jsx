@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import { FiShoppingBag, FiUsers, FiPackage, FiTrash2 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 const AdminStats = () => {
   const [stats, setStats] = useState(null);
   const [recentOrders, setRecentOrders] = useState([]);
+  const [salesData, setSalesData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,6 +17,7 @@ const AdminStats = () => {
         const response = await api.get('/admin/stats');
         setStats(response.data.stats);
         setRecentOrders(response.data.recentOrders);
+        setSalesData(response.data.salesData || []);
       } catch (err) {
         console.error('Error fetching admin statistics:', err);
       } finally {
@@ -34,6 +37,7 @@ const AdminStats = () => {
         const response = await api.get('/admin/stats');
         setStats(response.data.stats);
         setRecentOrders(response.data.recentOrders);
+        setSalesData(response.data.salesData || []);
       } catch (err) {
         toast.error('Failed to delete order');
       }
@@ -72,6 +76,53 @@ const AdminStats = () => {
             </div>
           </div>
         ))}
+      </section>
+
+      {/* Charts Section */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue Line Chart */}
+        <div className="bg-white p-6 border border-luxury-gold/15">
+          <h3 className="font-serif text-sm uppercase tracking-widest text-luxury-black font-semibold border-b border-luxury-gold/10 pb-3 mb-4">
+            Monthly Revenue Trend (₦)
+          </h3>
+          <div className="h-72 w-full font-sans text-[10px]">
+            {salesData && salesData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={salesData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                  <XAxis dataKey="month" stroke="#94A3B8" />
+                  <YAxis stroke="#94A3B8" tickFormatter={(val) => `₦${(val / 1000).toFixed(0)}k`} />
+                  <Tooltip formatter={(value) => [`₦${value.toLocaleString()}`, 'Revenue']} />
+                  <Line type="monotone" dataKey="revenue" stroke="#D4AF37" strokeWidth={2} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-luxury-gray italic">No sales trend logged yet.</div>
+            )}
+          </div>
+        </div>
+
+        {/* Orders Bar Chart */}
+        <div className="bg-white p-6 border border-luxury-gold/15">
+          <h3 className="font-serif text-sm uppercase tracking-widest text-luxury-black font-semibold border-b border-luxury-gold/10 pb-3 mb-4">
+            Monthly Orders Count
+          </h3>
+          <div className="h-72 w-full font-sans text-[10px]">
+            {salesData && salesData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={salesData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
+                  <XAxis dataKey="month" stroke="#94A3B8" />
+                  <YAxis stroke="#94A3B8" allowDecimals={false} />
+                  <Tooltip formatter={(value) => [value, 'Orders']} />
+                  <Bar dataKey="orders" fill="#0F172A" barSize={30} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-luxury-gray italic">No orders logged yet.</div>
+            )}
+          </div>
+        </div>
       </section>
 
       {/* Recent Orders table */}
