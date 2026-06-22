@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FiHeart, FiShoppingBag } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCart } from '../redux/slices/cartSlice';
-import api from '../utils/api';
+import api, { getImageUrl } from '../utils/api';
 import toast from 'react-hot-toast';
 import { formatPrice } from '../utils/currency';
 
@@ -98,7 +98,7 @@ const ProductCard = ({ product, isWishlisted, onToggleWishlist, index }) => {
         style={{ transform: 'translateZ(20px)' }}
       >
         <motion.img
-          src={product.images && product.images[0]}
+          src={product.images && getImageUrl(product.images[0])}
           alt={product.name}
           whileHover={{ scale: 1.05, y: -4 }}
           transition={{ duration: 0.6, ease: [0.25, 1, 0.5, 1] }}

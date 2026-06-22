@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import api from '../utils/api';
+import api, { getImageUrl } from '../utils/api';
 import { setCart } from '../redux/slices/cartSlice';
 import { setWishlist } from '../redux/slices/wishlistSlice';
 import toast from 'react-hot-toast';
@@ -305,7 +305,7 @@ const ProductDetails = () => {
                 onTouchEnd={handleEnd}
               >
                 <img
-                  src={product.images[frameIndex]}
+                  src={getImageUrl(product.images[frameIndex])}
                   alt={`${product.name} 360 rotation view frame`}
                   className="h-full w-full object-cover pointer-events-none"
                 />
@@ -335,7 +335,7 @@ const ProductDetails = () => {
               renderVideoPlayer(activeImage)
             ) : (
               <img
-                src={activeImage}
+                src={getImageUrl(activeImage)}
                 alt={product.name}
                 className="h-full w-full object-cover zoom-image"
               />
@@ -361,7 +361,7 @@ const ProductDetails = () => {
                 }`}
                 aria-label={`Thumbnail ${i + 1}`}
               >
-                <img src={imgUrl} alt="" className="h-full w-full object-cover" />
+                <img src={getImageUrl(imgUrl)} alt="" className="h-full w-full object-cover" />
               </button>
             ))}
             {product.video && (

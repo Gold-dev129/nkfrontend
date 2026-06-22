@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import api from '../utils/api';
+import api, { getImageUrl } from '../utils/api';
 import { setCart, clearCartState } from '../redux/slices/cartSlice';
 import toast from 'react-hot-toast';
 import { FiMinus, FiPlus, FiTrash2, FiShoppingBag, FiArrowRight } from 'react-icons/fi';
@@ -140,7 +140,7 @@ const CartPage = () => {
                   {/* Image & Title */}
                   <div className="flex items-center space-x-6 w-full sm:w-auto">
                     <img
-                      src={product.images[0]}
+                      src={getImageUrl(product.images[0])}
                       alt={product.name}
                       className="h-24 w-24 object-cover border border-luxury-gold/10"
                     />

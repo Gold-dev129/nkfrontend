@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { motion, AnimatePresence } from 'framer-motion';
-import api from '../utils/api';
+import api, { getImageUrl } from '../utils/api';
 import toast from 'react-hot-toast';
 import { setWishlist } from '../redux/slices/wishlistSlice';
 import { FiHeart, FiArrowRight, FiShield, FiTruck, FiScissors } from 'react-icons/fi';
@@ -162,7 +162,7 @@ const Home = () => {
                 >
                   {/* Ken Burns Zoom Effect */}
                   <motion.img
-                    src={banners[currentBannerIndex].image}
+                    src={getImageUrl(banners[currentBannerIndex].image)}
                     alt={banners[currentBannerIndex].title}
                     initial={{ scale: 1.08 }}
                     animate={{ scale: 1 }}
@@ -312,7 +312,7 @@ const Home = () => {
                   to={`/shop?category=${cat.slug}`}
                   className="group p-6 border border-slate-200 relative overflow-hidden flex flex-col justify-between h-48 transition-all duration-350 hover:shadow-lg"
                   style={cat.image ? {
-                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25)), url(${cat.image})`,
+                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25)), url(${getImageUrl(cat.image)})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center'
                   } : {

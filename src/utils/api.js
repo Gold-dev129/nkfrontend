@@ -23,4 +23,14 @@ api.interceptors.request.use(
   }
 );
 
+export const getImageUrl = (imagePath) => {
+  if (!imagePath) return '';
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://') || imagePath.startsWith('data:')) {
+    return imagePath;
+  }
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const cleanPath = imagePath.startsWith('/') ? imagePath.slice(1) : imagePath;
+  return `${baseUrl}${cleanPath}`;
+};
+
 export default api;

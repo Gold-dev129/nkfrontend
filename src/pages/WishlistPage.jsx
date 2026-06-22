@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setWishlist } from '../redux/slices/wishlistSlice';
 import { setCart } from '../redux/slices/cartSlice';
-import api from '../utils/api';
+import api, { getImageUrl } from '../utils/api';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { FiTrash2, FiShoppingBag, FiHeart, FiArrowRight } from 'react-icons/fi';
@@ -75,7 +75,7 @@ const WishlistPage = () => {
               {/* Product Image */}
               <Link to={`/shop/${prod.slug}`} className="block relative overflow-hidden h-60 bg-luxury-cream/10">
                 <img
-                  src={prod.images && prod.images[0]}
+                  src={prod.images && getImageUrl(prod.images[0])}
                   alt={prod.name}
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-103"
                 />
