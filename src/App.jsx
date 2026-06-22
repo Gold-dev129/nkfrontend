@@ -73,7 +73,7 @@ function App() {
   }, [isAuthenticated, dispatch]);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ScrollToTop />
       <Routes>
         {/* Client Routes */}
