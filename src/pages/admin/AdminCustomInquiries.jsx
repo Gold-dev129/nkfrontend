@@ -246,7 +246,7 @@ const AdminCustomInquiries = () => {
                   </div>
 
                   {/* Reference sketch */}
-                  {selectedInquiry.referenceImage ? (
+                  {selectedInquiry.referenceImage && (
                     <div className="space-y-1">
                       <span className="text-[9px] uppercase tracking-wider font-semibold text-luxury-gray block">Reference sketch</span>
                       <div className="bg-white p-2 border border-slate-100 flex flex-col items-center gap-2">
@@ -265,9 +265,33 @@ const AdminCustomInquiries = () => {
                         </a>
                       </div>
                     </div>
-                  ) : (
+                  )}
+
+                  {/* Reference video */}
+                  {selectedInquiry.referenceVideo && (
+                    <div className="space-y-1">
+                      <span className="text-[9px] uppercase tracking-wider font-semibold text-luxury-gray block">Reference Video / Render</span>
+                      <div className="bg-white p-2 border border-slate-100 flex flex-col items-center gap-2">
+                        <video 
+                          src={selectedInquiry.referenceVideo} 
+                          controls
+                          className="max-h-[140px] w-full object-contain bg-slate-50 p-1"
+                        />
+                        <a 
+                          href={selectedInquiry.referenceVideo} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="text-[9px] text-luxury-gold uppercase font-bold tracking-wider hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <FiExternalLink /> Open Full Video
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {!selectedInquiry.referenceImage && !selectedInquiry.referenceVideo && (
                     <div className="bg-slate-100 p-3 text-center border border-dashed border-slate-200 text-luxury-gray italic">
-                      No design sketch reference uploaded.
+                      No design sketch or video references uploaded.
                     </div>
                   )}
 

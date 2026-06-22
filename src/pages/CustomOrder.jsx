@@ -15,6 +15,8 @@ const CustomOrder = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [videoFile, setVideoFile] = useState(null);
+  const [videoPreview, setVideoPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
@@ -57,6 +59,22 @@ const CustomOrder = () => {
     }
   };
 
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error('Video size must be less than 25MB');
+        return;
+      }
+      setVideoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setVideoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -70,6 +88,9 @@ const CustomOrder = () => {
     submitData.append('description', formData.description);
     if (imageFile) {
       submitData.append('referenceImage', imageFile);
+    }
+    if (videoFile) {
+      submitData.append('referenceVideo', videoFile);
     }
 
     try {
@@ -99,6 +120,8 @@ const CustomOrder = () => {
     });
     setImageFile(null);
     setImagePreview(null);
+    setVideoFile(null);
+    setVideoPreview(null);
     setIsSuccess(false);
     setSubmittedData(null);
   };
@@ -280,6 +303,45 @@ const CustomOrder = () => {
                   </div>
                 </div>
 
+                {/* Video Upload Area */}
+                <div className="space-y-2">
+                  <label className="block text-luxury-gray uppercase tracking-wider font-semibold">Design Video or 3D Render (Optional)</label>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="md:col-span-2 border-2 border-dashed border-slate-200 hover:border-luxury-gold/40 transition-colors p-6 flex flex-col items-center justify-center text-center relative cursor-pointer min-h-[160px]">
+                      <input 
+                        type="file"
+                        accept="video/*"
+                        onChange={handleVideoChange}
+                        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                      />
+                      <FiUploadCloud className="text-3xl text-luxury-gold/60 mb-2" />
+                      <span className="font-semibold block text-luxury-black mb-1">Click or Drag Video File</span>
+                      <span className="text-[10px] text-luxury-gray">MP4, WEBM, MOV (Max 25MB)</span>
+                    </div>
+
+                    <div className="border border-slate-200 p-3 flex items-center justify-center bg-slate-50 relative min-h-[160px]">
+                      {videoPreview ? (
+                        <div className="w-full h-full flex flex-col items-center justify-between">
+                          <video 
+                            src={videoPreview} 
+                            controls
+                            className="max-h-[120px] max-w-full object-contain"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => { setVideoFile(null); setVideoPreview(null); }}
+                            className="text-[10px] uppercase font-bold text-red-600 hover:text-red-800 transition-colors cursor-pointer mt-1"
+                          >
+                            Remove Video
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-luxury-gray/50 text-[10px] uppercase tracking-wider font-medium text-center">No video uploaded</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
                 {/* Submit Action */}
                 <div className="pt-4 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-slate-100">
                   <div className="flex items-center space-x-2 text-luxury-gray">
@@ -338,6 +400,19 @@ const CustomOrder = () => {
                       className="font-bold text-luxury-gold underline hover:text-luxury-black text-[10px]"
                     >
                       View uploaded sketch
+                    </a>
+                  </div>
+                )}
+                {submittedData?.referenceVideo && (
+                  <div className="flex justify-between border-b border-slate-200 pb-2 items-center">
+                    <span className="font-semibold text-luxury-gray uppercase tracking-wider text-[9px]">Video Reference:</span>
+                    <a 
+                      href={submittedData.referenceVideo} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="font-bold text-luxury-gold underline hover:text-luxury-black text-[10px]"
+                    >
+                      Watch uploaded video
                     </a>
                   </div>
                 )}
