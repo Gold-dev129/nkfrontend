@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
-import { FiShoppingBag, FiUsers, FiPackage } from 'react-icons/fi';
+import { FiShoppingBag, FiUsers, FiPackage, FiTrash2 } from 'react-icons/fi';
+import toast from 'react-hot-toast';
 
 const AdminStats = () => {
   const [stats, setStats] = useState(null);
@@ -22,6 +23,22 @@ const AdminStats = () => {
     };
     fetchStats();
   }, []);
+
+  const handleDeleteOrder = async (id) => {
+    if (window.confirm('Delete / Cancel this order? Stock counts will be rolled back for this order if status is not Cancelled.')) {
+      try {
+        await api.delete(`/orders/${id}`);
+        toast.success('Order deleted and stock rolled back');
+        
+        // Reload stats and recent orders list
+        const response = await api.get('/admin/stats');
+        setStats(response.data.stats);
+        setRecentOrders(response.data.recentOrders);
+      } catch (err) {
+        toast.error('Failed to delete order');
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -73,6 +90,7 @@ const AdminStats = () => {
                 <th className="py-3 px-4">Paid Status</th>
                 <th className="py-3 px-4">Order Status</th>
                 <th className="py-3 px-4 text-right">Value</th>
+                <th className="py-3 px-4 text-center">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -93,11 +111,20 @@ const AdminStats = () => {
                       <span className="font-bold text-luxury-black uppercase tracking-widest">{order.status}</span>
                     </td>
                     <td className="py-3 px-4 text-right font-bold text-luxury-gold">₦{order.totalPrice.toLocaleString()}</td>
+                    <td className="py-3 px-4 text-center">
+                      <button
+                        onClick={() => handleDeleteOrder(order._id)}
+                        className="text-red-700 hover:text-red-900 text-sm cursor-pointer"
+                        aria-label="Delete order"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="py-6 text-center text-luxury-gray italic">No orders logged in store database yet.</td>
+                  <td colSpan="7" className="py-6 text-center text-luxury-gray italic">No orders logged in store database yet.</td>
                 </tr>
               )}
             </tbody>
