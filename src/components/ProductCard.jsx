@@ -117,9 +117,9 @@ const ProductCard = ({ product, isWishlisted, onToggleWishlist, index }) => {
           <FiHeart className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
         </button>
 
-        {product.discountPrice > 0 && (
-          <span className="absolute top-4 left-4 z-20 bg-luxury-gold text-luxury-black text-[9px] font-bold px-2 py-1 uppercase tracking-wider">
-            Sale
+        {product.discountPrice > 0 && product.price > 0 && (
+          <span className="absolute top-4 left-4 z-20 bg-luxury-black text-white border border-luxury-gold/50 text-[9px] font-bold px-2 py-1 uppercase tracking-wider">
+            Up To {Math.round(((product.price - product.discountPrice) / product.price) * 100)}% Off
           </span>
         )}
 

@@ -45,18 +45,34 @@ const Shop = () => {
     fetchCategories();
   }, []);
 
+  // Synchronize state when URL search params change
+  useEffect(() => {
+    setSearch(searchParams.get('search') || '');
+    setCategory(searchParams.get('category') || '');
+    setMinPrice(searchParams.get('minPrice') || '');
+    setMaxPrice(searchParams.get('maxPrice') || '');
+    setSort(searchParams.get('sort') || '-createdAt');
+    setPage(Number(searchParams.get('page')) || 1);
+  }, [searchParams]);
+
   // Fetch products on query parameters change
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
         const params = {};
-        if (search) params.search = search;
-        if (category) params.category = category;
-        if (minPrice) params.minPrice = minPrice;
-        if (maxPrice) params.maxPrice = maxPrice;
-        if (sort) params.sort = sort;
-        params.page = page;
+        const urlSearch = searchParams.get('search');
+        const urlCategory = searchParams.get('category');
+        const urlMin = searchParams.get('minPrice');
+        const urlMax = searchParams.get('maxPrice');
+        const urlSort = searchParams.get('sort');
+
+        if (urlSearch) params.search = urlSearch;
+        if (urlCategory) params.category = urlCategory;
+        if (urlMin) params.minPrice = urlMin;
+        if (urlMax) params.maxPrice = urlMax;
+        if (urlSort) params.sort = urlSort;
+        params.page = Number(searchParams.get('page')) || 1;
         params.limit = 9;
 
         const response = await api.get('/products', { params });
@@ -70,7 +86,7 @@ const Shop = () => {
       }
     };
     fetchProducts();
-  }, [searchParams, page]);
+  }, [searchParams]);
 
   // Synchronize search params with URL
   const applyFilters = () => {

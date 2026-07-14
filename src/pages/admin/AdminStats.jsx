@@ -148,7 +148,7 @@ const AdminStats = () => {
               {recentOrders.length > 0 ? (
                 recentOrders.map((order) => (
                   <tr key={order._id} className="border-b border-luxury-gold/5 hover:bg-luxury-gold/5 transition-colors">
-                    <td className="py-3 px-4 font-semibold text-luxury-black">{order._id.substring(0, 8)}...</td>
+                    <td className="py-3 px-4 font-semibold text-luxury-black">{order.orderId || `${order._id.substring(0, 8)}...`}</td>
                     <td className="py-3 px-4">{order.user?.name || 'Guest'}</td>
                     <td className="py-3 px-4">{order.paymentMethod}</td>
                     <td className="py-3 px-4">

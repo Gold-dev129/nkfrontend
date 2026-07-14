@@ -340,9 +340,9 @@ const ProductDetails = () => {
                 className="h-full w-full object-cover zoom-image"
               />
             )}
-            {product.discountPrice > 0 && (
-              <span className="absolute top-4 right-4 z-25 bg-luxury-gold text-luxury-black text-[10px] font-bold px-2 py-1 uppercase tracking-wider">
-                Sale
+            {product.discountPrice > 0 && product.price > 0 && (
+              <span className="absolute top-4 right-4 z-25 bg-luxury-black text-white border border-luxury-gold/50 text-[10px] font-bold px-2 py-1 uppercase tracking-wider">
+                Up To {Math.round(((product.price - product.discountPrice) / product.price) * 100)}% Off
               </span>
             )}
           </div>

@@ -159,6 +159,7 @@ const Checkout = () => {
 
     const orderAddress = {
       name: shippingName,
+      phone: shippingPhone,
       street: shippingAddress,
       city: shippingCity,
       state: shippingState,

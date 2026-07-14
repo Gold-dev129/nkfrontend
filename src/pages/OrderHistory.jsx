@@ -194,7 +194,7 @@ const OrderHistory = () => {
                 {/* Order Header Summary Row */}
                 <div className="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-50/50">
                   <div className="space-y-1">
-                    <p className="text-[10px] font-mono text-slate-400">ORDER ID: {order._id}</p>
+                    <p className="text-[10px] font-mono text-slate-400">ORDER ID: {order.orderId || order._id}</p>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-luxury-gray text-[10px] font-semibold uppercase tracking-wider">
                       <span>Date: <strong className="text-luxury-black">{new Date(order.createdAt).toLocaleDateString()}</strong></span>
                       <span>Total: <strong className="text-luxury-gold">{formatPrice(order.totalPrice, currentCurrency, exchangeRate)}</strong></span>

@@ -15,6 +15,7 @@ const AdminProducts = () => {
   const [sku, setSku] = useState('');
   const [price, setPrice] = useState('');
   const [discountPrice, setDiscountPrice] = useState('');
+  const [discountPercentage, setDiscountPercentage] = useState('');
   const [stock, setStock] = useState('');
   const [material, setMaterial] = useState('');
   const [weight, setWeight] = useState('');
@@ -33,6 +34,38 @@ const AdminProducts = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [imagesToDelete, setImagesToDelete] = useState([]);
+
+  // Recalculation helpers for real-time price/discount synchronization
+  const handleDiscountPercentChange = (val) => {
+    setDiscountPercentage(val);
+    if (val && price) {
+      const computed = Math.round(Number(price) - (Number(price) * Number(val) / 100));
+      setDiscountPrice(computed);
+    } else {
+      setDiscountPrice('');
+    }
+  };
+
+  const handleDiscountPriceChange = (val) => {
+    setDiscountPrice(val);
+    if (val && price && Number(price) > 0) {
+      const computed = Math.round(((Number(price) - Number(val)) / Number(price)) * 100);
+      setDiscountPercentage(computed);
+    } else {
+      setDiscountPercentage('');
+    }
+  };
+
+  const handlePriceChange = (val) => {
+    setPrice(val);
+    if (discountPercentage && val) {
+      const computed = Math.round(Number(val) - (Number(val) * Number(discountPercentage) / 100));
+      setDiscountPrice(computed);
+    } else if (discountPrice && val && Number(val) > 0) {
+      const computed = Math.round(((Number(val) - Number(discountPrice)) / Number(val)) * 100);
+      setDiscountPercentage(computed);
+    }
+  };
   const [replaceImages, setReplaceImages] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -69,6 +102,7 @@ const AdminProducts = () => {
     setSku('');
     setPrice('');
     setDiscountPrice('');
+    setDiscountPercentage('');
     setStock('');
     setMaterial('Gold');
     setWeight('');
@@ -95,6 +129,7 @@ const AdminProducts = () => {
     setSku(prod.sku);
     setPrice(prod.price);
     setDiscountPrice(prod.discountPrice || '');
+    setDiscountPercentage(prod.discountPercentage || (prod.discountPrice && prod.price ? Math.round(((prod.price - prod.discountPrice) / prod.price) * 100) : ''));
     setStock(prod.stock);
     setMaterial(prod.material);
     setWeight(prod.weight || '');
@@ -144,6 +179,7 @@ const AdminProducts = () => {
     formData.append('name', name);
     formData.append('sku', sku);
     formData.append('price', price);
+    formData.append('discountPercentage', discountPercentage || 0);
     formData.append('discountPrice', discountPrice || 0);
     formData.append('stock', stock);
     formData.append('material', material);
@@ -260,15 +296,27 @@ const AdminProducts = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-luxury-gray font-semibold mb-2">Base Price (₦)</label>
                   <input
                     type="number"
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none"
+                    onChange={(e) => handlePriceChange(e.target.value)}
+                    className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none text-slate-950 font-medium"
                     required
+                  />
+                </div>
+                <div>
+                  <label className="block text-luxury-gray font-semibold mb-2">Discount (%)</label>
+                  <input
+                    type="number"
+                    value={discountPercentage}
+                    onChange={(e) => handleDiscountPercentChange(e.target.value)}
+                    className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none text-slate-950 font-medium"
+                    placeholder="e.g. 15"
+                    min="0"
+                    max="100"
                   />
                 </div>
                 <div>
@@ -276,8 +324,8 @@ const AdminProducts = () => {
                   <input
                     type="number"
                     value={discountPrice}
-                    onChange={(e) => setDiscountPrice(e.target.value)}
-                    className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none"
+                    onChange={(e) => handleDiscountPriceChange(e.target.value)}
+                    className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none text-slate-950 font-medium"
                     placeholder="Optional"
                   />
                 </div>

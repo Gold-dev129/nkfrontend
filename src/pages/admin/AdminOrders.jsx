@@ -53,10 +53,15 @@ const AdminOrders = () => {
 
   // Filters logic
   const filteredOrders = orders.filter((order) => {
+    const term = searchTerm.toLowerCase();
     const matchesSearch = 
-      order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.user?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.user?.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      (order.orderId && order.orderId.toLowerCase().includes(term)) ||
+      order._id.toLowerCase().includes(term) ||
+      (order.email && order.email.toLowerCase().includes(term)) ||
+      (order.user?.email && order.user.email.toLowerCase().includes(term)) ||
+      (order.user?.name && order.user.name.toLowerCase().includes(term)) ||
+      (order.shippingAddress?.name && order.shippingAddress.name.toLowerCase().includes(term)) ||
+      (order.shippingAddress?.phone && order.shippingAddress.phone.toLowerCase().includes(term));
       
     const matchesStatus = statusFilter === '' || order.status === statusFilter;
 
@@ -124,11 +129,17 @@ const AdminOrders = () => {
                   filteredOrders.map((order) => (
                     <tr key={order._id} className="border-b border-luxury-gold/5 hover:bg-luxury-gold/5 transition-colors">
                       <td className="py-3 px-4 font-mono font-semibold text-luxury-black">
-                        {order._id.substring(0, 8)}...
+                        {order.orderId || `${order._id.substring(0, 8)}...`}
                       </td>
                       <td className="py-3 px-4">
-                        <p className="font-semibold text-luxury-black">{order.user?.name || 'Guest'}</p>
-                        <p className="text-[9px] text-luxury-gray">{order.user?.email || 'N/A'}</p>
+                        <p className="font-semibold text-luxury-black">{order.shippingAddress?.name || order.user?.name || 'Guest'}</p>
+                        <p className="text-[9px] text-luxury-gray">{order.email || order.user?.email || 'N/A'}</p>
+                        {order.shippingAddress && (
+                          <p className="text-[9px] text-slate-500 font-medium mt-1 uppercase">
+                            {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state}
+                            {order.shippingAddress.phone ? ` | TEL: ${order.shippingAddress.phone}` : ''}
+                          </p>
+                        )}
                       </td>
                       <td className="py-3 px-4 uppercase">{order.paymentMethod}</td>
                       <td className="py-3 px-4">

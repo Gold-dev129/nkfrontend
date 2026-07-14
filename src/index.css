@@ -105,3 +105,17 @@
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
+
+/* Prevent auto-zoom on iOS devices by forcing 16px font-size on text inputs */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+

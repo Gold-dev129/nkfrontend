@@ -207,7 +207,7 @@ const OrderConfirmation = () => {
           </>
         )}
         <p className="text-[10px] text-slate-400 font-mono">
-          Order ID: {order._id} | Status: <span className="font-bold text-luxury-gold uppercase tracking-wider">{order.status}</span>
+          Order ID: {order.orderId || order._id} | Status: <span className="font-bold text-luxury-gold uppercase tracking-wider">{order.status}</span>
         </p>
       </motion.div>
 

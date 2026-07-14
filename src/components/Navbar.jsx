@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/slices/authSlice';
 import { clearCartState } from '../redux/slices/cartSlice';
 import { clearWishlistState } from '../redux/slices/wishlistSlice';
+import api from '../utils/api';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiShoppingBag, FiHeart, FiUser, FiMenu, FiX, FiLogOut, FiSettings } from 'react-icons/fi';
@@ -12,6 +13,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -35,6 +37,18 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await api.get('/categories');
+        setCategories(res.data.categories);
+      } catch (err) {
+        console.error('Failed to load categories in Navbar:', err);
+      }
+    };
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -88,6 +102,34 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 items-center">
+          {/* Categories Dropdown */}
+          <div className="relative group">
+            <button
+              className="font-sans text-[11px] uppercase tracking-widest font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5 cursor-pointer py-1"
+            >
+              <FiMenu className="text-[14px]" />
+              Categories
+            </button>
+            <div className="absolute left-0 mt-1 w-48 bg-white border border-slate-200 shadow-xl py-2 hidden group-hover:block z-50">
+              <Link
+                to="/shop"
+                className="block px-4 py-2 hover:bg-slate-50 text-slate-800 font-semibold uppercase tracking-wider text-[9px]"
+              >
+                Shop All
+              </Link>
+              <div className="border-t border-slate-100 my-1"></div>
+              {categories.map((cat) => (
+                <Link
+                  key={cat._id}
+                  to={`/shop?category=${cat.slug}`}
+                  className="block px-4 py-2 hover:bg-slate-50 text-slate-600 hover:text-slate-900 uppercase tracking-wider text-[9px]"
+                >
+                  {cat.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -243,6 +285,28 @@ const Navbar = () => {
                   Admin Portal
                 </Link>
               )}
+
+              {/* Mobile Categories section */}
+              <div className="border-t border-slate-100 pt-4 mt-2">
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-3">Categories</span>
+                <div className="flex flex-col space-y-3 pl-2">
+                  <Link
+                    to="/shop"
+                    className="uppercase tracking-widest font-semibold text-slate-700 hover:text-slate-900 transition-colors"
+                  >
+                    Shop All
+                  </Link>
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat._id}
+                      to={`/shop?category=${cat.slug}`}
+                      className="uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-colors"
+                    >
+                      {cat.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
 
 
             </div>

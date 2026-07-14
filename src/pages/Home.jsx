@@ -291,66 +291,6 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* 3. Text-Based Asymmetric Category Index */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-8">
-        <div className="border-b border-slate-200 pb-4">
-          <span className="text-slate-500 text-xs uppercase tracking-widest font-bold">Categories Showcase</span>
-          <h2 className="text-2xl font-bold tracking-tight uppercase mt-1">Browse by Type</h2>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {categories.length > 0 ? (
-            categories.map((cat, index) => (
-              <motion.div
-                key={cat._id}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-              >
-                <Link
-                  to={`/shop?category=${cat.slug}`}
-                  className="group p-6 border border-slate-200 relative overflow-hidden flex flex-col justify-between h-48 transition-all duration-350 hover:shadow-lg"
-                  style={cat.image ? {
-                    backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25)), url(${getImageUrl(cat.image)})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                  } : {
-                    backgroundColor: '#ffffff'
-                  }}
-                >
-                  <span className={`font-mono text-xs z-10 transition-colors ${cat.image ? 'text-slate-300' : 'text-slate-300'}`}>0{index + 1}</span>
-                  <div className="z-10">
-                    <h3 className={`text-sm font-semibold uppercase tracking-wider transition-colors ${cat.image ? 'text-white' : 'text-slate-800 group-hover:text-luxury-gold'}`}>{cat.name}</h3>
-                    <p className={`text-[10px] mt-1 uppercase tracking-widest flex items-center transition-colors ${cat.image ? 'text-luxury-gold' : 'text-slate-400 group-hover:text-slate-900'}`}>
-                      Explore <FiArrowRight className="ml-1 transition-transform group-hover:translate-x-1" />
-                    </p>
-                  </div>
-                </Link>
-              </motion.div>
-            ))
-          ) : (
-            // Monochromatic Category templates
-            ["Necklaces", "Rings", "Bracelets", "Watches"].map((name, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-              >
-                <Link
-                  to="/shop"
-                  className="p-6 border border-slate-200 bg-white hover:bg-slate-50 transition-colors flex flex-col justify-between h-48"
-                >
-                  <span className="font-mono text-slate-300 text-xs">0{i + 1}</span>
-                  <span className="text-sm font-semibold uppercase tracking-wider text-slate-800">{name}</span>
-                </Link>
-              </motion.div>
-            ))
-          )}
-        </div>
-      </section>
 
       {/* 4. Monochromatic Products Section */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-10">
