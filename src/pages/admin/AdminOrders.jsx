@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
-import { FiTrash2, FiSearch, FiSliders } from 'react-icons/fi';
+import { FiTrash2, FiSearch } from 'react-icons/fi';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [fulfillmentFilter, setFulfillmentFilter] = useState('');
 
   useEffect(() => {
     fetchOrders();
@@ -32,11 +33,24 @@ const AdminOrders = () => {
       
       // Update local state
       setOrders(orders.map(order => 
-        order._id === orderId ? { ...order, status: response.data.order.status, isDelivered: response.data.order.isDelivered, deliveredAt: response.data.order.deliveredAt } : order
+        order._id === orderId 
+          ? { 
+              ...order, 
+              status: response.data.order.status, 
+              isDelivered: response.data.order.isDelivered, 
+              deliveredAt: response.data.order.deliveredAt 
+            } 
+          : order
       ));
     } catch (err) {
       toast.error('Failed to update order status');
     }
+  };
+
+  const handleToggleFulfillment = async (orderId, currentStatus) => {
+    const isCurrentlyFulfilled = currentStatus === 'Delivered';
+    const newStatus = isCurrentlyFulfilled ? 'Processing' : 'Delivered';
+    await handleStatusChange(orderId, newStatus);
   };
 
   const handleDeleteOrder = async (id) => {
@@ -61,11 +75,20 @@ const AdminOrders = () => {
       (order.user?.email && order.user.email.toLowerCase().includes(term)) ||
       (order.user?.name && order.user.name.toLowerCase().includes(term)) ||
       (order.shippingAddress?.name && order.shippingAddress.name.toLowerCase().includes(term)) ||
-      (order.shippingAddress?.phone && order.shippingAddress.phone.toLowerCase().includes(term));
+      (order.shippingAddress?.phone && order.shippingAddress.phone.toLowerCase().includes(term)) ||
+      (order.shippingAddress?.street && order.shippingAddress.street.toLowerCase().includes(term));
       
     const matchesStatus = statusFilter === '' || order.status === statusFilter;
+    
+    let matchesFulfillment = true;
+    const isFulfilled = order.isDelivered || order.status === 'Delivered';
+    if (fulfillmentFilter === 'fulfilled') {
+      matchesFulfillment = isFulfilled;
+    } else if (fulfillmentFilter === 'unfulfilled') {
+      matchesFulfillment = !isFulfilled;
+    }
 
-    return matchesSearch && matchesStatus;
+    return matchesSearch && matchesStatus && matchesFulfillment;
   });
 
   return (
@@ -81,7 +104,7 @@ const AdminOrders = () => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="SEARCH BY ORDER ID, CUSTOMER NAME, EMAIL..."
+              placeholder="SEARCH BY ORDER ID, CUSTOMER NAME, EMAIL, PHONE, ADDRESS..."
               className="w-full bg-white border border-luxury-gold/20 pl-4 pr-10 py-3 uppercase tracking-wider focus:outline-none"
             />
             <span className="absolute right-3 top-3 text-luxury-gray text-lg">
@@ -90,9 +113,19 @@ const AdminOrders = () => {
           </div>
 
           <select
+            value={fulfillmentFilter}
+            onChange={(e) => setFulfillmentFilter(e.target.value)}
+            className="bg-white border border-luxury-gold/20 px-4 py-3 uppercase tracking-widest font-semibold focus:outline-none w-full sm:w-48 text-[10px]"
+          >
+            <option value="">All Fulfillment</option>
+            <option value="fulfilled">Fulfilled</option>
+            <option value="unfulfilled">Unfulfilled</option>
+          </select>
+
+          <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-white border border-luxury-gold/20 px-4 py-3 uppercase tracking-widest font-semibold focus:outline-none w-full sm:w-48"
+            className="bg-white border border-luxury-gold/20 px-4 py-3 uppercase tracking-widest font-semibold focus:outline-none w-full sm:w-48 text-[10px]"
           >
             <option value="">All Statuses</option>
             <option value="Pending">Pending</option>
@@ -116,9 +149,10 @@ const AdminOrders = () => {
               <thead>
                 <tr className="border-b border-luxury-gold/20 text-luxury-gray font-semibold uppercase tracking-wider">
                   <th className="py-3 px-4">Order ID</th>
-                  <th className="py-3 px-4">Customer</th>
-                  <th className="py-3 px-4">Method</th>
-                  <th className="py-3 px-4">Paid</th>
+                  <th className="py-3 px-4">Date</th>
+                  <th className="py-3 px-4">Customer Details</th>
+                  <th className="py-3 px-4">Payment</th>
+                  <th className="py-3 px-4">Fulfillment</th>
                   <th className="py-3 px-4">Value</th>
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4 text-center">Actions</th>
@@ -126,62 +160,99 @@ const AdminOrders = () => {
               </thead>
               <tbody>
                 {filteredOrders.length > 0 ? (
-                  filteredOrders.map((order) => (
-                    <tr key={order._id} className="border-b border-luxury-gold/5 hover:bg-luxury-gold/5 transition-colors">
-                      <td className="py-3 px-4 font-mono font-semibold text-luxury-black">
-                        {order.orderId || `${order._id.substring(0, 8)}...`}
-                      </td>
-                      <td className="py-3 px-4">
-                        <p className="font-semibold text-luxury-black">{order.shippingAddress?.name || order.user?.name || 'Guest'}</p>
-                        <p className="text-[9px] text-luxury-gray">{order.email || order.user?.email || 'N/A'}</p>
-                        {order.shippingAddress && (
-                          <p className="text-[9px] text-slate-500 font-medium mt-1 uppercase">
-                            {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state}
-                            {order.shippingAddress.phone ? ` | TEL: ${order.shippingAddress.phone}` : ''}
-                          </p>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 uppercase">{order.paymentMethod}</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-0.5 font-bold uppercase text-[9px] rounded ${
-                          order.isPaid ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-                        }`}>
-                          {order.isPaid ? 'Paid' : 'Unpaid'}
-                        </span>
-                        {order.paidAt && (
-                          <p className="text-[8px] text-luxury-gray mt-1">
-                            {new Date(order.paidAt).toLocaleDateString()}
-                          </p>
-                        )}
-                      </td>
-                      <td className="py-3 px-4 font-bold text-luxury-black">₦{order.totalPrice.toLocaleString()}</td>
-                      <td className="py-3 px-4">
-                        <select
-                          value={order.status}
-                          onChange={(e) => handleStatusChange(order._id, e.target.value)}
-                          className="bg-transparent border border-luxury-gold/25 px-2 py-1 uppercase text-[10px] font-bold focus:outline-none"
-                        >
-                          <option value="Pending">Pending</option>
-                          <option value="Processing">Processing</option>
-                          <option value="Shipped">Shipped</option>
-                          <option value="Delivered">Delivered</option>
-                          <option value="Cancelled">Cancelled</option>
-                        </select>
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <button
-                          onClick={() => handleDeleteOrder(order._id)}
-                          className="text-red-700 hover:text-red-900 text-lg"
-                          aria-label="Delete order"
-                        >
-                          <FiTrash2 />
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                  filteredOrders.map((order) => {
+                    const isFulfilled = order.isDelivered || order.status === 'Delivered';
+                    return (
+                      <tr key={order._id} className="border-b border-luxury-gold/5 hover:bg-luxury-gold/5 transition-colors">
+                        <td className="py-3 px-4 font-mono font-semibold text-luxury-black">
+                          {order.orderId || `${order._id.substring(0, 8)}...`}
+                        </td>
+                        <td className="py-3 px-4 text-slate-500 font-medium">
+                          {new Date(order.createdAt).toLocaleDateString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
+                          })}
+                        </td>
+                        <td className="py-3 px-4 space-y-1">
+                          <div className="font-semibold text-luxury-black text-[11px] uppercase">
+                            {order.shippingAddress?.name || order.user?.name || 'Guest'}
+                          </div>
+                          <div className="text-[10px] text-luxury-gray">
+                            <span className="font-semibold text-slate-400">EMAIL:</span> {order.email || order.user?.email || 'N/A'}
+                          </div>
+                          <div className="text-[10px] text-luxury-gray">
+                            <span className="font-semibold text-slate-400">PHONE:</span> {order.shippingAddress?.phone || order.user?.phoneNumber || 'N/A'}
+                          </div>
+                          {order.shippingAddress?.street && (
+                            <div className="text-[10px] text-slate-500 uppercase leading-tight max-w-xs pt-0.5">
+                              <span className="font-semibold text-slate-400">ADDR:</span> {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state}, {order.shippingAddress.country}
+                            </div>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex flex-col gap-1">
+                            <span className={`px-2 py-0.5 font-bold uppercase text-[9px] rounded w-fit ${
+                              order.isPaid ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+                            }`}>
+                              {order.isPaid ? 'Paid' : 'Unpaid'}
+                            </span>
+                            {order.paidAt && (
+                              <p className="text-[8px] text-luxury-gray font-semibold mt-0.5">
+                                {new Date(order.paidAt).toLocaleDateString()}
+                              </p>
+                            )}
+                            <p className="text-[8px] text-luxury-gray uppercase tracking-widest mt-0.5 font-semibold">{order.paymentMethod}</p>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex flex-col gap-1.5">
+                            <span className={`px-2 py-0.5 font-bold uppercase text-[9px] rounded w-fit ${
+                              isFulfilled ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'
+                            }`}>
+                              {isFulfilled ? 'Fulfilled' : 'Unfulfilled'}
+                            </span>
+                            <button
+                              onClick={() => handleToggleFulfillment(order._id, order.status)}
+                              className={`px-2 py-1 text-[8px] uppercase tracking-wider font-semibold border text-center rounded transition-all cursor-pointer ${
+                                isFulfilled
+                                  ? 'border-yellow-600/30 text-yellow-700 bg-yellow-50/50 hover:bg-yellow-100'
+                                  : 'border-green-600/30 text-green-700 bg-green-50/50 hover:bg-green-100'
+                              }`}
+                            >
+                              {isFulfilled ? 'Mark Unfulfilled' : 'Mark Fulfilled'}
+                            </button>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 font-bold text-luxury-black">₦{order.totalPrice.toLocaleString()}</td>
+                        <td className="py-3 px-4">
+                          <select
+                            value={order.status}
+                            onChange={(e) => handleStatusChange(order._id, e.target.value)}
+                            className="bg-transparent border border-luxury-gold/25 px-2 py-1 uppercase text-[10px] font-bold focus:outline-none"
+                          >
+                            <option value="Pending">Pending</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                          </select>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <button
+                            onClick={() => handleDeleteOrder(order._id)}
+                            className="text-red-700 hover:text-red-900 text-lg cursor-pointer"
+                            aria-label="Delete / Cancel order"
+                          >
+                            <FiTrash2 />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
-                    <td colSpan="7" className="py-6 text-center text-luxury-gray italic">No orders match filter query.</td>
+                    <td colSpan="8" className="py-6 text-center text-luxury-gray italic">No orders match filter query.</td>
                   </tr>
                 )}
               </tbody>
