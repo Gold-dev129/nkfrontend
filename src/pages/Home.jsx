@@ -300,13 +300,13 @@ const Home = () => {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[1, 2, 3, 4].map(n => (
               <div key={n} className="h-64 skeleton border border-slate-200"></div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {categories.length > 0 ? (
               categories.map((cat, index) => (
                 <motion.div
@@ -366,11 +366,11 @@ const Home = () => {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[1, 2, 3, 4].map(n => <div key={n} className="h-72 skeleton"></div>)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {bestSellers.length > 0 ? (
               bestSellers.map((prod, index) => (
                 <ProductCard
@@ -398,7 +398,7 @@ const Home = () => {
           <div className="w-8 h-[1px] bg-slate-900 mx-auto mt-3"></div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
           {loading ? (
             [1, 2, 3].map(n => <div key={n} className="h-80 skeleton"></div>)
           ) : newArrivals.length > 0 ? (

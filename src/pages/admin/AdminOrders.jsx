@@ -175,18 +175,18 @@ const AdminOrders = () => {
                           })}
                         </td>
                         <td className="py-3 px-4 space-y-1">
-                          <div className="font-semibold text-luxury-black text-[11px] uppercase">
+                          <div className="font-bold text-luxury-black text-[13px] uppercase">
                             {order.shippingAddress?.name || order.user?.name || 'Guest'}
                           </div>
-                          <div className="text-[10px] text-luxury-gray">
-                            <span className="font-semibold text-slate-400">EMAIL:</span> {order.email || order.user?.email || 'N/A'}
+                          <div className="text-[12px] text-slate-800">
+                            <span className="font-bold text-slate-500">EMAIL:</span> {order.email || order.user?.email || 'N/A'}
                           </div>
-                          <div className="text-[10px] text-luxury-gray">
-                            <span className="font-semibold text-slate-400">PHONE:</span> {order.shippingAddress?.phone || order.user?.phoneNumber || 'N/A'}
+                          <div className="text-[12px] text-slate-800">
+                            <span className="font-bold text-slate-500">PHONE:</span> {order.shippingAddress?.phone || order.user?.phoneNumber || 'N/A'}
                           </div>
                           {order.shippingAddress?.street && (
-                            <div className="text-[10px] text-slate-500 uppercase leading-tight max-w-xs pt-0.5">
-                              <span className="font-semibold text-slate-400">ADDR:</span> {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state}, {order.shippingAddress.country}
+                            <div className="text-[12px] text-slate-800 uppercase leading-normal max-w-sm pt-0.5">
+                              <span className="font-bold text-slate-500">ADDR:</span> {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state}, {order.shippingAddress.country}
                             </div>
                           )}
                         </td>

@@ -638,7 +638,7 @@ const ProductDetails = () => {
       {relatedProducts.length > 0 && (
         <section className="pt-8 border-t border-luxury-gold/10">
           <h3 className="font-serif text-lg text-luxury-black mb-8 text-center">You May Also Exquisite</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
             {relatedProducts.map((prod, index) => (
               <ProductCard
                 key={prod._id}
