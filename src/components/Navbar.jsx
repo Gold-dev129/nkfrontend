@@ -75,6 +75,25 @@ const Navbar = () => {
     navLinks.push({ name: 'My Orders', path: '/order-history' });
   }
 
+  categories.forEach((cat) => {
+    navLinks.push({
+      name: cat.name,
+      path: `/shop?category=${cat.slug}`,
+      isCategory: true
+    });
+  });
+
+  const isActiveLink = (link) => {
+    if (link.path === '/shop') {
+      return location.pathname === '/shop' && !location.search.includes('category=');
+    }
+    if (link.isCategory) {
+      const slug = link.path.split('category=')[1];
+      return location.pathname === '/shop' && location.search.includes(`category=${slug}`);
+    }
+    return location.pathname === link.path;
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
@@ -102,44 +121,17 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 items-center">
-          {navLinks.map((link) => {
-            if (link.name === 'Shop All') {
-              return (
-                <div key={link.name} className="relative group">
-                  <Link
-                    to={link.path}
-                    className={`font-sans text-[11px] uppercase tracking-widest font-semibold hover:text-slate-500 transition-colors relative group py-1 flex items-center gap-1 ${
-                      location.pathname === link.path ? 'text-slate-900 font-bold border-b border-slate-900 pb-1' : 'text-slate-600'
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                  <div className="absolute left-0 mt-1 w-48 bg-white border border-slate-200 shadow-xl py-2 hidden group-hover:block z-50">
-                    {categories.map((cat) => (
-                      <Link
-                        key={cat._id}
-                        to={`/shop?category=${cat.slug}`}
-                        className="block px-4 py-2 hover:bg-slate-50 text-slate-600 hover:text-slate-950 uppercase tracking-wider text-[9px] font-semibold"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              );
-            }
-            return (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`font-sans text-[11px] uppercase tracking-widest font-semibold hover:text-slate-500 transition-colors relative group ${
-                  location.pathname === link.path ? 'text-slate-900 font-bold' : 'text-slate-600'
-                }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              className={`font-sans text-[11px] uppercase tracking-widest font-semibold hover:text-slate-500 transition-colors relative group ${
+                isActiveLink(link) ? 'text-slate-900 font-bold border-b border-slate-900 pb-1' : 'text-slate-600'
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
         </div>
 
         {/* Action Icons */}
@@ -265,44 +257,17 @@ const Navbar = () => {
             className="md:hidden w-full bg-white border-b border-slate-200"
           >
             <div className="flex flex-col space-y-4 px-6 py-6 font-sans text-xs">
-              {navLinks.map((link) => {
-                if (link.name === 'Shop All') {
-                  return (
-                    <div key={link.name} className="flex flex-col space-y-2">
-                      <Link
-                        to={link.path}
-                        className={`uppercase tracking-widest font-semibold text-slate-700 hover:text-slate-900 transition-colors ${
-                          location.pathname === link.path ? 'text-slate-900 font-bold' : ''
-                        }`}
-                      >
-                        {link.name}
-                      </Link>
-                      <div className="flex flex-col space-y-2 pl-4 border-l border-slate-200 py-1">
-                        {categories.map((cat) => (
-                          <Link
-                            key={cat._id}
-                            to={`/shop?category=${cat.slug}`}
-                            className="uppercase tracking-widest text-[10px] text-slate-500 hover:text-slate-900 transition-colors"
-                          >
-                            {cat.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                }
-                return (
-                  <Link
-                    key={link.name}
-                    to={link.path}
-                    className={`uppercase tracking-widest font-semibold text-slate-700 hover:text-slate-900 transition-colors ${
-                      location.pathname === link.path ? 'text-slate-900 font-bold' : ''
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                );
-              })}
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  className={`uppercase tracking-widest font-semibold hover:text-slate-900 transition-colors ${
+                    isActiveLink(link) ? 'text-slate-900 font-bold' : 'text-slate-700'
+                  } ${link.isCategory ? 'text-[10px] pl-4 text-slate-400' : 'text-xs'}`}
+                >
+                  {link.name}
+                </Link>
+              ))}
               {isAuthenticated && user?.role === 'admin' && (
                 <Link
                   to="/admin"
