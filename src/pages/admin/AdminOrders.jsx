@@ -3,6 +3,19 @@ import api from '../../utils/api';
 import toast from 'react-hot-toast';
 import { FiTrash2, FiSearch } from 'react-icons/fi';
 
+const getCustomerName = (order) => {
+  if (order.shippingAddress?.name) return order.shippingAddress.name;
+  if (order.user?.name) return order.user.name;
+  if (order.email) {
+    const parts = order.email.split('@');
+    if (parts.length > 0) {
+      const username = parts[0];
+      return username.charAt(0).toUpperCase() + username.slice(1) + ' (Guest)';
+    }
+  }
+  return 'Guest';
+};
+
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -176,7 +189,7 @@ const AdminOrders = () => {
                         </td>
                         <td className="py-3 px-4 space-y-1">
                           <div className="font-bold text-luxury-black text-[13px] uppercase">
-                            {order.shippingAddress?.name || order.user?.name || 'Guest'}
+                            {getCustomerName(order)}
                           </div>
                           <div className="text-[12px] text-slate-800">
                             <span className="font-bold text-slate-500">EMAIL:</span> {order.email || order.user?.email || 'N/A'}
