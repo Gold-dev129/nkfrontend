@@ -291,6 +291,67 @@ const Home = () => {
         </motion.div>
       </section>
 
+      {/* 3. Curated Categories Showcase */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-10">
+        <div className="text-center">
+          <span className="text-slate-500 text-xs uppercase tracking-widest font-bold block">Curated Collections</span>
+          <h2 className="text-2xl font-bold tracking-tight uppercase mt-2">Shop by Category</h2>
+          <div className="w-8 h-[1px] bg-slate-900 mx-auto mt-3"></div>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map(n => (
+              <div key={n} className="h-64 skeleton border border-slate-200"></div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {categories.length > 0 ? (
+              categories.map((cat, index) => (
+                <motion.div
+                  key={cat._id}
+                  initial={{ opacity: 0, y: 15 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group relative h-80 border border-slate-200 bg-slate-50 overflow-hidden cursor-pointer"
+                  onClick={() => navigate(`/shop?category=${cat.slug}`)}
+                >
+                  {cat.image ? (
+                    <img
+                      src={getImageUrl(cat.image)}
+                      alt={cat.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center p-6 bg-gradient-to-tr from-slate-900 via-slate-800 to-slate-950 text-white">
+                      <span className="font-mono text-[#D4AF37] text-[10px] tracking-widest uppercase block mb-2">NKYLUXURY</span>
+                      <h3 className="font-serif text-base uppercase tracking-wider text-center">{cat.name}</h3>
+                      <p className="text-[10px] text-slate-400 text-center mt-2 max-w-[180px] line-clamp-2">{cat.description}</p>
+                    </div>
+                  )}
+
+                  {cat.image && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent flex flex-col justify-end p-6 text-white">
+                      <span className="font-mono text-[#D4AF37] text-[9px] tracking-widest uppercase block mb-1">Collection</span>
+                      <h3 className="font-serif text-base uppercase tracking-wider">{cat.name}</h3>
+                      <p className="text-[10px] text-slate-300 mt-1 line-clamp-2 max-w-[200px] font-light">{cat.description}</p>
+                      <div className="pt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span className="text-[9px] font-bold uppercase tracking-widest border-b border-[#D4AF37] text-[#D4AF37] pb-0.5">Explore pieces</span>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              ))
+            ) : (
+              <div className="col-span-4 text-center py-12 text-slate-400 italic bg-slate-50 border border-slate-200">
+                No categories found. Configure categories in the Admin Portal to display.
+              </div>
+            )}
+          </div>
+        )}
+      </section>
 
       {/* 4. Monochromatic Products Section */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 space-y-10">

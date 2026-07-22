@@ -20,6 +20,7 @@ const CartPage = () => {
   // Calculate Subtotal
   const calculateSubtotal = () => {
     return cartItems.reduce((acc, item) => {
+      if (!item.product) return acc;
       const price = item.product.discountPrice > 0 ? item.product.discountPrice : item.product.price;
       return acc + price * item.quantity;
     }, 0);

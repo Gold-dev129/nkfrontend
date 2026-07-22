@@ -87,6 +87,7 @@ const Checkout = () => {
   // Calculations
   const calculateSubtotal = () => {
     return cartItems.reduce((acc, item) => {
+      if (!item.product) return acc;
       const price = item.product.discountPrice > 0 ? item.product.discountPrice : item.product.price;
       return acc + price * item.quantity;
     }, 0);
@@ -170,7 +171,7 @@ const Checkout = () => {
     try {
       // 1. Post Order to Backend
       const orderData = {
-        orderItems: cartItems.map(item => ({
+        orderItems: cartItems.filter(item => item.product).map(item => ({
           product: item.product._id,
           name: item.product.name,
           quantity: item.quantity,
@@ -487,6 +488,7 @@ const Checkout = () => {
             
             <div className="space-y-4 max-h-60 overflow-y-auto pr-1">
               {cartItems.map((item) => {
+                if (!item.product) return null;
                 const itemPrice = item.product.discountPrice > 0 ? item.product.discountPrice : item.product.price;
                 return (
                   <div key={item._id} className="flex justify-between items-center gap-3">

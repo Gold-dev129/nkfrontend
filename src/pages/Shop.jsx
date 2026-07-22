@@ -114,6 +114,32 @@ const Shop = () => {
     setShowMobileFilters(false);
   };
 
+  const handleCategorySelect = (selectedCat, isMobile = false) => {
+    setCategory(selectedCat);
+    const params = Object.fromEntries(searchParams.entries());
+    if (selectedCat) {
+      params.category = selectedCat;
+    } else {
+      delete params.category;
+    }
+    params.page = 1;
+    setSearchParams(params);
+    if (isMobile) {
+      setShowMobileFilters(false);
+    }
+  };
+
+  const handleSortSelect = (selectedSort, isMobile = false) => {
+    setSort(selectedSort);
+    const params = Object.fromEntries(searchParams.entries());
+    params.sort = selectedSort;
+    params.page = 1;
+    setSearchParams(params);
+    if (isMobile) {
+      setShowMobileFilters(false);
+    }
+  };
+
   const handlePageChange = (newPage) => {
     if (newPage < 1 || newPage > totalPages) return;
     setPage(newPage);
@@ -215,7 +241,7 @@ const Shop = () => {
                 <input
                   type="radio"
                   checked={category === ''}
-                  onChange={() => setCategory('')}
+                  onChange={() => handleCategorySelect('')}
                   className="accent-luxury-gold"
                 />
                 <span className={category === '' ? 'text-luxury-gold font-bold' : 'text-luxury-gray'}>All Categories</span>
@@ -225,7 +251,7 @@ const Shop = () => {
                   <input
                     type="radio"
                     checked={category === cat.slug || category === cat._id}
-                    onChange={() => setCategory(cat.slug)}
+                    onChange={() => handleCategorySelect(cat.slug)}
                     className="accent-luxury-gold"
                   />
                   <span className={(category === cat.slug || category === cat._id) ? 'text-luxury-gold font-bold' : 'text-luxury-gray'}>
@@ -264,7 +290,7 @@ const Shop = () => {
             <h4 className="font-semibold uppercase tracking-wider text-luxury-black">Sort By</h4>
             <select
               value={sort}
-              onChange={(e) => setSort(e.target.value)}
+              onChange={(e) => handleSortSelect(e.target.value)}
               className="w-full bg-white border border-luxury-gold/20 px-3 py-3 focus:outline-none focus:border-luxury-gold uppercase"
             >
               <option value="-createdAt">Newest Arrivals</option>
@@ -360,7 +386,7 @@ const Shop = () => {
                   <h4 className="font-semibold uppercase tracking-wider text-luxury-black">Categories</h4>
                   <div className="space-y-2">
                     <label className="flex items-center space-x-2 cursor-pointer uppercase text-[10px]">
-                      <input type="radio" checked={category === ''} onChange={() => setCategory('')} className="accent-luxury-gold" />
+                      <input type="radio" checked={category === ''} onChange={() => handleCategorySelect('', true)} className="accent-luxury-gold" />
                       <span className={category === '' ? 'text-luxury-gold font-bold' : 'text-luxury-gray'}>All</span>
                     </label>
                     {categories.map((cat) => (
@@ -368,7 +394,7 @@ const Shop = () => {
                         <input
                           type="radio"
                           checked={category === cat.slug || category === cat._id}
-                          onChange={() => setCategory(cat.slug)}
+                          onChange={() => handleCategorySelect(cat.slug, true)}
                           className="accent-luxury-gold"
                         />
                         <span className={(category === cat.slug || category === cat._id) ? 'text-luxury-gold font-bold' : 'text-luxury-gray'}>
@@ -407,7 +433,7 @@ const Shop = () => {
                   <h4 className="font-semibold uppercase tracking-wider text-luxury-black">Sort</h4>
                   <select
                     value={sort}
-                    onChange={(e) => setSort(e.target.value)}
+                    onChange={(e) => handleSortSelect(e.target.value, true)}
                     className="w-full bg-white border border-luxury-gold/20 px-3 py-3 focus:outline-none"
                   >
                     <option value="-createdAt">Newest</option>
