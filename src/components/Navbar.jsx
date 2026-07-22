@@ -65,7 +65,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Shop', path: '/shop' },
+    { name: 'Shop All', path: '/shop' },
     { name: 'Bespoke', path: '/bespoke' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' }
@@ -102,45 +102,44 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex space-x-8 items-center">
-          {/* Categories Dropdown */}
-          <div className="relative group">
-            <button
-              className="font-sans text-[11px] uppercase tracking-widest font-semibold text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1.5 cursor-pointer py-1"
-            >
-              <FiMenu className="text-[14px]" />
-              Categories
-            </button>
-            <div className="absolute left-0 mt-1 w-48 bg-white border border-slate-200 shadow-xl py-2 hidden group-hover:block z-50">
+          {navLinks.map((link) => {
+            if (link.name === 'Shop All') {
+              return (
+                <div key={link.name} className="relative group">
+                  <Link
+                    to={link.path}
+                    className={`font-sans text-[11px] uppercase tracking-widest font-semibold hover:text-slate-500 transition-colors relative group py-1 flex items-center gap-1 ${
+                      location.pathname === link.path ? 'text-slate-900 font-bold border-b border-slate-900 pb-1' : 'text-slate-600'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                  <div className="absolute left-0 mt-1 w-48 bg-white border border-slate-200 shadow-xl py-2 hidden group-hover:block z-50">
+                    {categories.map((cat) => (
+                      <Link
+                        key={cat._id}
+                        to={`/shop?category=${cat.slug}`}
+                        className="block px-4 py-2 hover:bg-slate-50 text-slate-600 hover:text-slate-950 uppercase tracking-wider text-[9px] font-semibold"
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+            return (
               <Link
-                to="/shop"
-                className="block px-4 py-2 hover:bg-slate-50 text-slate-800 font-semibold uppercase tracking-wider text-[9px]"
+                key={link.name}
+                to={link.path}
+                className={`font-sans text-[11px] uppercase tracking-widest font-semibold hover:text-slate-500 transition-colors relative group ${
+                  location.pathname === link.path ? 'text-slate-900 font-bold' : 'text-slate-600'
+                }`}
               >
-                Shop All
+                {link.name}
               </Link>
-              <div className="border-t border-slate-100 my-1"></div>
-              {categories.map((cat) => (
-                <Link
-                  key={cat._id}
-                  to={`/shop?category=${cat.slug}`}
-                  className="block px-4 py-2 hover:bg-slate-50 text-slate-600 hover:text-slate-900 uppercase tracking-wider text-[9px]"
-                >
-                  {cat.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className={`font-sans text-[11px] uppercase tracking-widest font-semibold hover:text-slate-500 transition-colors relative group ${
-                location.pathname === link.path ? 'text-slate-900 font-bold border-b border-slate-900 pb-1' : 'text-slate-600'
-              }`}
-            >
-              {link.name}
-            </Link>
-          ))}
+            );
+          })}
         </div>
 
         {/* Action Icons */}
@@ -266,17 +265,44 @@ const Navbar = () => {
             className="md:hidden w-full bg-white border-b border-slate-200"
           >
             <div className="flex flex-col space-y-4 px-6 py-6 font-sans text-xs">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={`uppercase tracking-widest font-semibold text-slate-700 hover:text-slate-900 transition-colors ${
-                    location.pathname === link.path ? 'text-slate-900 font-bold' : ''
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                if (link.name === 'Shop All') {
+                  return (
+                    <div key={link.name} className="flex flex-col space-y-2">
+                      <Link
+                        to={link.path}
+                        className={`uppercase tracking-widest font-semibold text-slate-700 hover:text-slate-900 transition-colors ${
+                          location.pathname === link.path ? 'text-slate-900 font-bold' : ''
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                      <div className="flex flex-col space-y-2 pl-4 border-l border-slate-200 py-1">
+                        {categories.map((cat) => (
+                          <Link
+                            key={cat._id}
+                            to={`/shop?category=${cat.slug}`}
+                            className="uppercase tracking-widest text-[10px] text-slate-500 hover:text-slate-900 transition-colors"
+                          >
+                            {cat.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <Link
+                    key={link.name}
+                    to={link.path}
+                    className={`uppercase tracking-widest font-semibold text-slate-700 hover:text-slate-900 transition-colors ${
+                      location.pathname === link.path ? 'text-slate-900 font-bold' : ''
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
               {isAuthenticated && user?.role === 'admin' && (
                 <Link
                   to="/admin"
@@ -285,28 +311,6 @@ const Navbar = () => {
                   Admin Portal
                 </Link>
               )}
-
-              {/* Mobile Categories section */}
-              <div className="border-t border-slate-100 pt-4 mt-2">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-3">Categories</span>
-                <div className="flex flex-col space-y-3 pl-2">
-                  <Link
-                    to="/shop"
-                    className="uppercase tracking-widest font-semibold text-slate-700 hover:text-slate-900 transition-colors"
-                  >
-                    Shop All
-                  </Link>
-                  {categories.map((cat) => (
-                    <Link
-                      key={cat._id}
-                      to={`/shop?category=${cat.slug}`}
-                      className="uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-colors"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
 
 
             </div>
