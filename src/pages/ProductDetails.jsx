@@ -220,11 +220,14 @@ const ProductDetails = () => {
 
   const isVideoUrl = (url) => {
     if (!url) return false;
-    return url.includes('.mp4') || url.includes('.webm') || url.includes('.ogg') || url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com') || url.includes('cloudinary.com');
+    const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.flv', '.wmv'];
+    const isVideoExtension = videoExtensions.some(ext => url.toLowerCase().includes(ext));
+    return isVideoExtension || url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com') || url.includes('/video/upload/');
   };
 
   const renderVideoPlayer = (url) => {
-    if (url.includes('.mp4') || url.includes('.webm') || url.includes('.ogg') || url.includes('cloudinary.com')) {
+    const isDirectVideo = url.includes('.mp4') || url.includes('.webm') || url.includes('.ogg') || url.includes('/video/upload/');
+    if (isDirectVideo) {
       return (
         <video
           src={url}
