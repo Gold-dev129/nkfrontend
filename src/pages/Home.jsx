@@ -170,48 +170,17 @@ const Home = () => {
                     className="w-full h-full object-cover brightness-[0.75]"
                   />
                   
-                  {/* Dynamic Staggered Overlay Content */}
+                  {/* Static Overlay Content */}
                   <div className="absolute inset-0 flex flex-col justify-end p-8 text-white space-y-2 bg-gradient-to-t from-black/75 via-black/30 to-transparent">
-                    <motion.span
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2, duration: 0.7 }}
-                      className="font-mono text-[9px] tracking-widest text-[#D4AF37] uppercase font-bold"
-                    >
-                      Featured Showcase
-                    </motion.span>
-                    
-                    <motion.h3
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3, duration: 0.7 }}
-                      className="text-lg md:text-xl font-serif font-bold uppercase tracking-wider text-white"
-                    >
-                      {banners[currentBannerIndex].title}
-                    </motion.h3>
-                    
-                    <motion.p
-                      initial={{ opacity: 0, y: 12 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4, duration: 0.7 }}
-                      className="text-[11px] text-slate-200 font-light max-w-sm leading-relaxed"
-                    >
-                      {banners[currentBannerIndex].subtitle}
-                    </motion.p>
-                    
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5, duration: 0.5 }}
-                      className="pt-2"
-                    >
+                    <span className="font-mono text-[#D4AF37] text-xs block tracking-widest uppercase mb-1">NKYLUXURY PIECES</span>
+                    <div className="pt-2">
                       <Link 
-                        to={banners[currentBannerIndex].link || "/shop"} 
+                        to="/shop" 
                         className="text-xs font-bold uppercase tracking-widest border-b border-[#D4AF37] text-[#D4AF37] hover:text-white hover:border-white transition-colors pb-0.5 inline-block"
                       >
-                        Explore Curation
+                        Shop Now
                       </Link>
-                    </motion.div>
+                    </div>
                   </div>
                 </motion.div>
               </AnimatePresence>
@@ -235,12 +204,16 @@ const Home = () => {
             </div>
           ) : (
             <div className="h-96 border border-slate-200 bg-slate-900 flex flex-col items-center justify-center p-6 relative overflow-hidden">
-              <div className="border border-slate-800/40 p-8 text-center space-y-4 max-w-xs bg-black/35 backdrop-blur-sm z-10">
+              <img 
+                src={getImageUrl('/images/banners/banner1.jpg')} 
+                alt="NKYLUXURY Showcase" 
+                className="absolute inset-0 w-full h-full object-cover brightness-[0.75]" 
+              />
+              <div className="border border-slate-800/40 p-8 text-center space-y-4 max-w-xs bg-black/45 backdrop-blur-sm z-10">
                 <span className="font-mono text-[#D4AF37] text-xs block tracking-widest uppercase mb-2">NKYLUXURY PIECES</span>
                 <Link to="/shop" className="text-xs text-[#D4AF37] font-bold underline block pt-2 uppercase tracking-widest">Shop Now</Link>
               </div>
-              <div className="absolute top-4 left-4 font-mono text-[10px] text-slate-500">EST. 2026</div>
-              <div className="absolute inset-0 bg-gradient-to-tr from-slate-950 via-slate-900 to-slate-950 opacity-90 z-0"></div>
+              <div className="absolute top-4 left-4 font-mono text-[10px] text-slate-300 z-10">EST. 2026</div>
             </div>
           )}
         </div>
@@ -313,7 +286,7 @@ const Home = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group relative h-80 border border-slate-200 bg-slate-50 overflow-hidden cursor-pointer"
+                  className="group relative h-64 border border-slate-200 bg-slate-50 overflow-hidden cursor-pointer"
                   onClick={() => navigate(`/shop?category=${cat.slug}`)}
                 >
                   {cat.image ? (
