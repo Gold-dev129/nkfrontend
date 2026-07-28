@@ -55,7 +55,7 @@ const Home = () => {
     
     const interval = setInterval(() => {
       setCurrentBannerIndex((prev) => (prev + 1) % banners.length);
-    }, 6000); // Transition every 6 seconds
+    }, 5000); // Transition every 5 seconds
     
     return () => clearInterval(interval);
   }, [banners.length, currentBannerIndex]);
@@ -120,8 +120,8 @@ const Home = () => {
               transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
               className="text-4xl md:text-6xl font-bold tracking-tight uppercase leading-none text-slate-900"
             >
-              MINIMAL DESIGN <br/>
-              MAXIMAL STATEMENT
+              THE ART OF <br/>
+              LUXURY LIVING
             </motion.h1>
             
             <motion.p
@@ -130,7 +130,7 @@ const Home = () => {
               transition={{ duration: 0.9, delay: 0.3, ease: "easeOut" }}
               className="text-slate-600 text-sm max-w-md font-light leading-relaxed"
             >
-              Explore our curation of luxury diamonds and signature wristwatches. Pure lines, brilliant cuts, and expert craftsmanship engineered for the modern aesthetic.
+              Discover exceptional jewellery, statement accessories, luxury bags, and timeless watches—expertly crafted for those who appreciate modern elegance and uncompromising quality.
             </motion.p>
             
             <motion.div
@@ -236,9 +236,7 @@ const Home = () => {
           ) : (
             <div className="h-96 border border-slate-200 bg-slate-900 flex flex-col items-center justify-center p-6 relative overflow-hidden">
               <div className="border border-slate-800/40 p-8 text-center space-y-4 max-w-xs bg-black/35 backdrop-blur-sm z-10">
-                <span className="font-mono text-[#D4AF37] text-xs block tracking-widest uppercase">NKYLUXURY PIECES</span>
-                <h3 className="text-sm font-semibold uppercase tracking-widest text-white">Diamond & Horology Curation</h3>
-                <p className="text-[11px] text-slate-300">VVS diamonds, custom settings, and luxury wristwatches.</p>
+                <span className="font-mono text-[#D4AF37] text-xs block tracking-widest uppercase mb-2">NKYLUXURY PIECES</span>
                 <Link to="/shop" className="text-xs text-[#D4AF37] font-bold underline block pt-2 uppercase tracking-widest">Shop Now</Link>
               </div>
               <div className="absolute top-4 left-4 font-mono text-[10px] text-slate-500">EST. 2026</div>
@@ -273,7 +271,7 @@ const Home = () => {
           <FiTruck className="text-2xl text-slate-700" />
           <h3 className="font-semibold text-xs uppercase tracking-wider text-slate-900">Priority Courier</h3>
           <p className="text-slate-600 text-xs font-light leading-relaxed">
-            Insured premium courier delivery straight to your doorstep across Nigeria.
+            Insured premium courier delivery straight to your doorstep across Nigeria and worldwide.
           </p>
         </motion.div>
         <motion.div
