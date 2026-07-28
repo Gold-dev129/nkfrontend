@@ -170,18 +170,63 @@ const Home = () => {
                     className="w-full h-full object-cover brightness-[0.75]"
                   />
                   
-                  {/* Static Overlay Content */}
-                  <div className="absolute inset-0 flex flex-col justify-end p-8 text-white space-y-2 bg-gradient-to-t from-black/75 via-black/30 to-transparent">
-                    <span className="font-mono text-[#D4AF37] text-xs block tracking-widest uppercase mb-1">NKYLUXURY PIECES</span>
-                    <div className="pt-2">
-                      <Link 
-                        to="/shop" 
-                        className="text-xs font-bold uppercase tracking-widest border-b border-[#D4AF37] text-[#D4AF37] hover:text-white hover:border-white transition-colors pb-0.5 inline-block"
-                      >
-                        Shop Now
-                      </Link>
+                  {/* Conditional Overlay Content: Slide 0 is clean/static, other slides show dynamic write-ups */}
+                  {currentBannerIndex === 0 ? (
+                    <div className="absolute inset-0 flex flex-col justify-end p-8 text-white space-y-2 bg-gradient-to-t from-black/75 via-black/30 to-transparent">
+                      <span className="font-mono text-[#D4AF37] text-xs block tracking-widest uppercase mb-1">NKYLUXURY PIECES</span>
+                      <div className="pt-2">
+                        <Link 
+                          to="/shop" 
+                          className="text-xs font-bold uppercase tracking-widest border-b border-[#D4AF37] text-[#D4AF37] hover:text-white hover:border-white transition-colors pb-0.5 inline-block"
+                        >
+                          Shop Now
+                        </Link>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="absolute inset-0 flex flex-col justify-end p-8 text-white space-y-2 bg-gradient-to-t from-black/75 via-black/30 to-transparent">
+                      <motion.span
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.7 }}
+                        className="font-mono text-[9px] tracking-widest text-[#D4AF37] uppercase font-bold"
+                      >
+                        Featured Showcase
+                      </motion.span>
+                      
+                      <motion.h3
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.7 }}
+                        className="text-lg md:text-xl font-serif font-bold uppercase tracking-wider text-white"
+                      >
+                        {banners[currentBannerIndex].title}
+                      </motion.h3>
+                      
+                      <motion.p
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4, duration: 0.7 }}
+                        className="text-[11px] text-slate-200 font-light max-w-sm leading-relaxed"
+                      >
+                        {banners[currentBannerIndex].subtitle}
+                      </motion.p>
+                      
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5, duration: 0.5 }}
+                        className="pt-2"
+                      >
+                        <Link 
+                          to={banners[currentBannerIndex].link || "/shop"} 
+                          className="text-xs font-bold uppercase tracking-widest border-b border-[#D4AF37] text-[#D4AF37] hover:text-white hover:border-white transition-colors pb-0.5 inline-block"
+                        >
+                          Explore Curation
+                        </Link>
+                      </motion.div>
+                    </div>
+                  )}
                 </motion.div>
               </AnimatePresence>
 
