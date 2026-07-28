@@ -94,7 +94,7 @@ const ProductCard = ({ product, isWishlisted, onToggleWishlist, index }) => {
     >
       <Link 
         to={`/shop/${product.slug}`} 
-        className="block relative overflow-hidden h-72 bg-luxury-cream/5"
+        className="block relative overflow-hidden h-56 bg-luxury-cream/5"
         style={{ transform: 'translateZ(20px)' }}
       >
         <motion.img
@@ -133,7 +133,7 @@ const ProductCard = ({ product, isWishlisted, onToggleWishlist, index }) => {
       </Link>
 
       <div 
-        className="p-6 text-center"
+        className="p-4 text-center"
         style={{ transform: 'translateZ(10px)' }}
       >
         <p className="font-sans text-[9px] uppercase text-luxury-gray tracking-widest font-bold">{product.material}</p>
@@ -154,7 +154,7 @@ const ProductCard = ({ product, isWishlisted, onToggleWishlist, index }) => {
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 0}
-          className="mt-4 w-full bg-luxury-black text-white border border-luxury-gold py-2.5 text-[9px] uppercase tracking-widest font-semibold hover:bg-luxury-gold hover:text-luxury-black transition-all duration-300 cursor-pointer disabled:opacity-30 disabled:hover:bg-luxury-black disabled:hover:text-white flex items-center justify-center gap-1.5"
+          className="mt-3 w-full bg-luxury-black text-white border border-luxury-gold py-2 text-[9px] uppercase tracking-widest font-semibold hover:bg-luxury-gold hover:text-luxury-black transition-all duration-300 cursor-pointer disabled:opacity-30 disabled:hover:bg-luxury-black disabled:hover:text-white flex items-center justify-center gap-1.5"
         >
           <FiShoppingBag className="text-xs" />
           {product.stock === 0 ? 'Out of Stock' : 'Add to Bag'}

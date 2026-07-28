@@ -365,7 +365,7 @@ const Home = () => {
 
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {[1, 2, 3, 4].map(n => <div key={n} className="h-72 skeleton"></div>)}
+            {[1, 2, 3, 4].map(n => <div key={n} className="h-64 skeleton"></div>)}
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -398,7 +398,7 @@ const Home = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
           {loading ? (
-            [1, 2, 3].map(n => <div key={n} className="h-80 skeleton"></div>)
+            [1, 2, 3].map(n => <div key={n} className="h-64 skeleton"></div>)
           ) : newArrivals.length > 0 ? (
             newArrivals.map((prod, index) => (
               <ProductCard
