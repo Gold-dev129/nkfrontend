@@ -266,7 +266,7 @@ const Shop = () => {
 
           {/* Price Range */}
           <div className="space-y-3">
-            <h4 className="font-semibold uppercase tracking-wider text-luxury-black">Price Range ({currentCurrency === 'USD' ? '$' : '₦'})</h4>
+            <h4 className="font-semibold uppercase tracking-wider text-luxury-black">Price Range (₦)</h4>
             <div className="flex gap-2">
               <input
                 type="number"
@@ -409,7 +409,7 @@ const Shop = () => {
 
                 {/* Price */}
                 <div className="space-y-2">
-                  <h4 className="font-semibold uppercase tracking-wider text-luxury-black">Price Range ({currentCurrency === 'USD' ? '$' : '₦'})</h4>
+                  <h4 className="font-semibold uppercase tracking-wider text-luxury-black">Price Range (₦)</h4>
                   <div className="flex gap-2">
                     <input
                       type="number"

@@ -453,7 +453,7 @@ const ProductDetails = () => {
               <div>
                 <span className="text-luxury-gray uppercase block font-semibold text-[10px]">Availability</span>
                 <span className={`font-semibold ${product.isCustom ? 'text-luxury-gold' : product.stock > 0 ? 'text-green-700' : 'text-red-700'}`}>
-                  {product.isCustom ? 'Custom Order (Made to Order)' : product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
+                  {product.isCustom ? 'Custom Order (Made to Order)' : product.stock > 0 ? 'In Stock' : 'Out of Stock'}
                 </span>
               </div>
             </div>
