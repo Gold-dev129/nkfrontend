@@ -31,6 +31,8 @@ import OrderHistory from './pages/OrderHistory';
 import ScrollToTop from './components/ScrollToTop';
 import Unsubscribe from './pages/Unsubscribe';
 import CustomOrder from './pages/CustomOrder';
+import RefundPolicy from './pages/RefundPolicy';
+import FAQ from './pages/FAQ';
 
 // Admin Pages
 import AdminStats from './pages/admin/AdminStats';
@@ -59,7 +61,7 @@ function App() {
           const wishlistRes = await api.get('/wishlist');
           dispatch(setWishlist(wishlistRes.data.wishlist));
         } catch (err) {
-          console.error('Error syncing user data:', err);
+          console.error('Error syncing cart and wishlist:', err);
         }
       } else {
         const guestWish = localStorage.getItem('guest_wishlist');
@@ -91,6 +93,8 @@ function App() {
           <Route path="order-confirmation/:orderId" element={<OrderConfirmation />} />
           <Route path="order-history" element={<OrderHistory />} />
           <Route path="bespoke" element={<CustomOrder />} />
+          <Route path="refund-policy" element={<RefundPolicy />} />
+          <Route path="faq" element={<FAQ />} />
           
           <Route path="checkout" element={<Checkout />} />
           <Route

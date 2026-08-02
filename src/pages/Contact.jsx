@@ -89,113 +89,51 @@ const Contact = () => {
       </section>
 
       {/* Main Sections */}
-      <section className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Contact Information Details */}
-        <div className="space-y-8">
-          <h2 className="font-serif text-xl text-luxury-black">Private Consultations</h2>
-          <p className="font-sans text-xs text-luxury-gray leading-relaxed">
+      <section className="max-w-2xl mx-auto px-6">
+        <div className="bg-white p-8 md:p-12 border border-luxury-gold/20 text-center space-y-8 shadow-sm">
+          <h2 className="font-serif text-xl text-luxury-black uppercase tracking-wider">Private Consultations</h2>
+          <p className="font-sans text-xs text-luxury-gray leading-relaxed max-w-md mx-auto">
             NKYLUXURY offers exclusive bespoke jewelry consultations. Speak to our concierge online to arrange virtual viewings or custom orders.
           </p>
 
-          <div className="space-y-6 pt-4 font-sans text-xs">
-            <div className="flex items-start space-x-4">
-              <FiPhone className="text-luxury-gold text-lg mt-1" />
+          <div className="grid grid-cols-1 gap-6 pt-4 font-sans text-xs text-left max-w-md mx-auto">
+            <div className="flex items-start space-x-4 border-b border-luxury-gold/10 pb-4">
+              <FiPhone className="text-luxury-gold text-lg mt-1 flex-shrink-0" />
               <div>
-                <h4 className="font-semibold text-luxury-black uppercase tracking-wider">Concierge Phone</h4>
-                <a href={`tel:${displayPhone.replace(/\s+/g, '')}`} className="text-luxury-gold hover:underline mt-1 block">
+                <span className="text-luxury-gray uppercase block font-semibold text-[9px] tracking-wider mb-0.5">Concierge Phone</span>
+                <a href={`tel:${displayPhone.replace(/\s+/g, '')}`} className="text-luxury-black font-medium text-sm hover:text-luxury-gold transition-colors">
                   {displayPhone}
                 </a>
               </div>
             </div>
 
-            <div className="flex items-start space-x-4">
-              <FiInstagram className="text-luxury-gold text-lg mt-1" />
+            <div className="flex items-start space-x-4 border-b border-luxury-gold/10 pb-4">
+              <FiInstagram className="text-luxury-gold text-lg mt-1 flex-shrink-0" />
               <div>
-                <h4 className="font-semibold text-luxury-black uppercase tracking-wider">Instagram Portfolio</h4>
+                <span className="text-luxury-gray uppercase block font-semibold text-[9px] tracking-wider mb-0.5">Instagram Portfolio</span>
                 <a 
                   href={`https://instagram.com/${displayInstagram}`} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="text-luxury-gold hover:underline mt-1 block"
+                  className="text-luxury-black font-medium text-sm hover:text-luxury-gold transition-colors"
                 >
                   @{displayInstagram}
                 </a>
               </div>
             </div>
-
-            <div className="pt-6 border-t border-luxury-gold/10">
-              <a
-                href="https://wa.me/2347051530996?text=Hello%20NKYLUXURY%20Concierge%2C%20I%20would%20like%20to%20inquire%20about%20your%20jewelry%20collections."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-luxury-black text-white border border-luxury-gold py-4 uppercase tracking-widest font-semibold hover:bg-luxury-gold hover:text-luxury-black transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer text-center"
-              >
-                <FiMessageSquare />
-                <span>Chat via WhatsApp</span>
-              </a>
-            </div>
           </div>
-        </div>
 
-        {/* Contact Form */}
-        <div className="bg-white p-8 border border-luxury-gold/20">
-          <h3 className="font-serif text-lg text-luxury-black mb-6">Send an Inquiry</h3>
-          <form onSubmit={handleSubmit} className="space-y-6 font-sans text-xs">
-            <div>
-              <label className="block uppercase tracking-wider text-luxury-gray mb-2 font-semibold">Your Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="w-full bg-transparent border border-luxury-gold/20 px-4 py-3 focus:outline-none focus:border-luxury-gold"
-                required
-              />
-            </div>
-            <div>
-              <label className="block uppercase tracking-wider text-luxury-gray mb-2 font-semibold">Your Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full bg-transparent border border-luxury-gold/20 px-4 py-3 focus:outline-none focus:border-luxury-gold"
-                required
-              />
-            </div>
-            <div>
-              <label className="block uppercase tracking-wider text-luxury-gray mb-2 font-semibold">Subject</label>
-              <select
-                name="subject"
-                value={formData.subject}
-                onChange={handleInputChange}
-                className="w-full bg-transparent border border-luxury-gold/20 px-4 py-3 focus:outline-none focus:border-luxury-gold"
-              >
-                <option value="General Inquiry">General Inquiry</option>
-                <option value="Bespoke / Custom Order">Bespoke / Custom Order</option>
-                <option value="Order Support">Order Support</option>
-              </select>
-            </div>
-            <div>
-              <label className="block uppercase tracking-wider text-luxury-gray mb-2 font-semibold">Message</label>
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                rows="4"
-                className="w-full bg-transparent border border-luxury-gold/20 px-4 py-3 focus:outline-none focus:border-luxury-gold resize-none"
-                required
-              ></textarea>
-            </div>
-
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full bg-luxury-black text-white font-semibold uppercase tracking-luxury py-4 border border-luxury-gold hover:bg-luxury-gold hover:text-luxury-black transition-all duration-300"
+          <div className="pt-6">
+            <a
+              href="https://wa.me/2347051530996?text=Hello%20NKYLUXURY%20Concierge%2C%20I%20would%20like%20to%20inquire%20about%20your%20jewelry%20collections."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-luxury-black text-white border border-luxury-gold py-4 uppercase tracking-widest font-semibold hover:bg-luxury-gold hover:text-luxury-black transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer text-center text-xs"
             >
-              {submitting ? 'Sending Message...' : 'Submit Message'}
-            </button>
-          </form>
+              <FiMessageSquare />
+              <span>Chat via WhatsApp</span>
+            </a>
+          </div>
         </div>
       </section>
     </div>

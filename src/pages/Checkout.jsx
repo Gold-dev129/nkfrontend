@@ -569,7 +569,7 @@ const Checkout = () => {
             {/* Store Policies */}
             <div className="bg-slate-50 border-l border-luxury-gold/50 p-4 text-[10px] space-y-2 text-slate-800 leading-relaxed font-sans">
               <p className="font-bold uppercase tracking-wider text-slate-900">Store Policies</p>
-              <p>• <strong>No Refund Policy:</strong> All sales are final. We do not offer refunds.</p>
+              <p>• <strong>Return & Refund Policy:</strong> Returns or exchanges are accepted within 7 days. See our <a href="/refund-policy" target="_blank" className="text-luxury-gold underline">Refund & Return Policy</a>.</p>
               <p>• <strong>Delivery Timeframe:</strong> Standard delivery takes 3-10 days. For custom-made orders, the timeline will be communicated directly to you once it is ready.</p>
               <p>• <strong>Delivery Fee:</strong> Paid directly to the courier agent. The exact fee is calculated and communicated once the item is ready for shipment.</p>
             </div>

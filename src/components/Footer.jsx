@@ -61,6 +61,12 @@ const Footer = () => {
               <Link to="/shop" className="hover:text-slate-900 transition-colors">Shop Curation</Link>
             </li>
             <li>
+              <Link to="/faq" className="hover:text-slate-900 transition-colors">FAQs</Link>
+            </li>
+            <li>
+              <Link to="/refund-policy" className="hover:text-slate-900 transition-colors">Refund & Return Policy</Link>
+            </li>
+            <li>
               <Link to="/about" className="hover:text-slate-900 transition-colors">Our Story</Link>
             </li>
             <li>
