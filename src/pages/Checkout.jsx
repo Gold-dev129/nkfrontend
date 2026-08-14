@@ -176,7 +176,8 @@ const Checkout = () => {
           name: item.product.name,
           quantity: item.quantity,
           image: item.product.images[0],
-          price: item.product.discountPrice > 0 ? item.product.discountPrice : item.product.price
+          price: item.product.discountPrice > 0 ? item.product.discountPrice : item.product.price,
+          color: item.color || ''
         })),
         shippingAddress: orderAddress,
         paymentMethod: 'Card', // Implicitly Card

@@ -26,7 +26,7 @@ const CartPage = () => {
     }, 0);
   };
 
-  const handleQuantityUpdate = async (productId, currentQty, stockLimit, direction) => {
+  const handleQuantityUpdate = async (itemId, productId, currentQty, stockLimit, direction) => {
     let newQty = direction === 'inc' ? currentQty + 1 : currentQty - 1;
     
     if (newQty < 1) return;
@@ -38,25 +38,25 @@ const CartPage = () => {
     if (!isAuthenticated) {
       const guestCart = localStorage.getItem('guest_cart');
       let items = guestCart ? JSON.parse(guestCart) : [];
-      items = items.map(item => item.product._id === productId ? { ...item, quantity: newQty } : item);
+      items = items.map(item => item._id === itemId ? { ...item, quantity: newQty } : item);
       localStorage.setItem('guest_cart', JSON.stringify(items));
       dispatch(setCart({ items }));
       return;
     }
 
     try {
-      const response = await api.put(`/cart/item/${productId}`, { quantity: newQty });
+      const response = await api.put(`/cart/item/${itemId}`, { quantity: newQty });
       dispatch(setCart(response.data.cart));
     } catch (err) {
       toast.error('Failed to update quantity');
     }
   };
 
-  const handleRemoveItem = async (productId) => {
+  const handleRemoveItem = async (itemId) => {
     if (!isAuthenticated) {
       const guestCart = localStorage.getItem('guest_cart');
       let items = guestCart ? JSON.parse(guestCart) : [];
-      items = items.filter(item => item.product._id !== productId);
+      items = items.filter(item => item._id !== itemId);
       localStorage.setItem('guest_cart', JSON.stringify(items));
       dispatch(setCart({ items }));
       toast.success('Item removed from cart');
@@ -64,7 +64,7 @@ const CartPage = () => {
     }
 
     try {
-      const response = await api.delete(`/cart/item/${productId}`);
+      const response = await api.delete(`/cart/item/${itemId}`);
       dispatch(setCart(response.data.cart));
       toast.success('Item removed from cart');
     } catch (err) {
@@ -201,9 +201,16 @@ const CartPage = () => {
                       className="h-24 w-24 object-cover border border-luxury-gold/10"
                     />
                     <div className="space-y-1">
-                      <span className="text-[10px] text-luxury-gold uppercase tracking-wider font-semibold">
-                        {product.material}
-                      </span>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] text-luxury-gold uppercase tracking-wider font-semibold">
+                          {product.material}
+                        </span>
+                        {item.color && (
+                          <span className="text-[9px] bg-luxury-gold/15 text-luxury-gold px-2 py-0.5 border border-luxury-gold/30 uppercase font-semibold tracking-wider rounded">
+                            {item.color}
+                          </span>
+                        )}
+                      </div>
                       <h3 className="font-serif text-sm text-luxury-black font-semibold hover:text-luxury-gold">
                         <Link to={`/shop/${product.slug}`}>{product.name}</Link>
                       </h3>
@@ -216,7 +223,7 @@ const CartPage = () => {
                     {/* Quantity selectors */}
                     <div className="flex items-center border border-luxury-gold/20 bg-white">
                       <button
-                        onClick={() => handleQuantityUpdate(product._id, item.quantity, product.stock, 'dec')}
+                        onClick={() => handleQuantityUpdate(item._id, product._id, item.quantity, product.stock, 'dec')}
                         disabled={item.quantity <= 1}
                         className="p-2 text-luxury-black hover:text-luxury-gold disabled:opacity-30"
                         aria-label="Decrease quantity"
@@ -225,7 +232,7 @@ const CartPage = () => {
                       </button>
                       <span className="px-3 font-semibold">{item.quantity}</span>
                       <button
-                        onClick={() => handleQuantityUpdate(product._id, item.quantity, product.stock, 'inc')}
+                        onClick={() => handleQuantityUpdate(item._id, product._id, item.quantity, product.stock, 'inc')}
                         className="p-2 text-luxury-black hover:text-luxury-gold"
                         aria-label="Increase quantity"
                       >
@@ -247,7 +254,7 @@ const CartPage = () => {
 
                     {/* Delete Icon */}
                     <button
-                      onClick={() => handleRemoveItem(product._id)}
+                      onClick={() => handleRemoveItem(item._id)}
                       className="text-luxury-gray hover:text-red-500 text-sm p-1"
                       aria-label="Remove item"
                     >

@@ -29,6 +29,7 @@ const AdminProducts = () => {
   const [videoFile, setVideoFile] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
   const [isCustom, setIsCustom] = useState(false);
+  const [colors, setColors] = useState('');
   
   // Image states
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -106,6 +107,7 @@ const AdminProducts = () => {
     setStock('');
     setMaterial('Gold');
     setWeight('');
+    setColors('');
     setCategory(categories[0]?._id || '');
     setShortDescription('');
     setDescription('');
@@ -133,6 +135,7 @@ const AdminProducts = () => {
     setStock(prod.stock);
     setMaterial(prod.material);
     setWeight(prod.weight || '');
+    setColors(prod.colors ? prod.colors.join(', ') : '');
     setCategory(prod.category?._id || prod.category);
     setShortDescription(prod.shortDescription);
     setDescription(prod.description);
@@ -192,6 +195,7 @@ const AdminProducts = () => {
     formData.append('newArrival', newArrival);
     formData.append('video', video);
     formData.append('isCustom', isCustom);
+    formData.append('colors', colors);
     if (videoFile) {
       formData.append('videoFile', videoFile);
     }
@@ -361,6 +365,16 @@ const AdminProducts = () => {
                     onChange={(e) => setWeight(e.target.value)}
                     className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none"
                     placeholder="e.g. 5g"
+                  />
+                </div>
+                <div>
+                  <label className="block text-luxury-gray font-semibold mb-2">Colors (Comma Separated)</label>
+                  <input
+                    type="text"
+                    value={colors}
+                    onChange={(e) => setColors(e.target.value)}
+                    className="w-full bg-transparent border border-luxury-gold/20 px-3 py-2 focus:outline-none"
+                    placeholder="e.g. Gold, Silver, Rose Gold"
                   />
                 </div>
               </div>
@@ -576,6 +590,11 @@ const AdminProducts = () => {
                               </span>
                             )}
                           </div>
+                          {prod.colors && prod.colors.length > 0 && (
+                            <div className="text-[9px] text-luxury-gold font-sans font-semibold uppercase tracking-wider mt-1">
+                              Colors: {prod.colors.join(', ')}
+                            </div>
+                          )}
                         </td>
                         <td className="py-3 px-4 font-mono">{prod.sku}</td>
                         <td className="py-3 px-4 uppercase text-luxury-gray">{prod.category?.name || 'N/A'}</td>

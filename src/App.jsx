@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import api from './utils/api';
 import { setCart } from './redux/slices/cartSlice';
@@ -78,7 +78,7 @@ function App() {
   }, [isAuthenticated, dispatch]);
 
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <HashRouter basename={import.meta.env.BASE_URL}>
       <ScrollToTop />
       <Routes>
         {/* Client Routes */}
@@ -137,7 +137,7 @@ function App() {
         {/* 404 Route redirect to home */}
         <Route path="*" element={<Home />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

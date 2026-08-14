@@ -228,7 +228,14 @@ const OrderConfirmation = () => {
                   <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                 </div>
                 <div className="flex-grow space-y-1">
-                  <h4 className="font-semibold text-luxury-black uppercase tracking-wide truncate max-w-[180px]">{item.name}</h4>
+                  <div className="flex items-center gap-2">
+                    <h4 className="font-semibold text-luxury-black uppercase tracking-wide truncate max-w-[180px]">{item.name}</h4>
+                    {item.color && (
+                      <span className="text-[8px] bg-luxury-gold/15 text-luxury-gold px-1.5 py-0.5 border border-luxury-gold/25 uppercase font-bold rounded">
+                        {item.color}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-luxury-gray text-[10px]">QTY: {item.quantity} | {formatPrice(item.price, currentCurrency, exchangeRate)}</p>
                 </div>
                 <div className="text-right">

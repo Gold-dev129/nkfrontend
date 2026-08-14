@@ -5,7 +5,7 @@ import api, { getImageUrl } from '../utils/api';
 import { setCart } from '../redux/slices/cartSlice';
 import { setWishlist } from '../redux/slices/wishlistSlice';
 import toast from 'react-hot-toast';
-import { FiHeart, FiMinus, FiPlus, FiShoppingBag, FiStar, FiVideo, FiMessageSquare, FiRefreshCw } from 'react-icons/fi';
+import { FiHeart, FiMinus, FiPlus, FiShoppingBag, FiStar, FiVideo, FiMessageSquare, FiRefreshCw, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { formatPrice } from '../utils/currency';
 import ProductCard from '../components/ProductCard';
 
@@ -23,6 +23,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState('');
   
   const [reviews, setReviews] = useState([]);
   const [newRating, setNewRating] = useState(5);
@@ -80,6 +81,13 @@ const ProductDetails = () => {
         setActiveImage(prod.images[0]);
         setQuantity(1);
 
+        // Initialize selected color
+        if (prod.colors && prod.colors.length > 0) {
+          setSelectedColor(prod.colors[0]);
+        } else {
+          setSelectedColor('');
+        }
+
         // Fetch related products
         const relRes = await api.get(`/products/related/${prod._id}`);
         setRelatedProducts(relRes.data.products);
@@ -111,6 +119,18 @@ const ProductDetails = () => {
     }
   };
 
+  const handleImageNav = (direction) => {
+    if (!product || !product.images || product.images.length === 0) return;
+    const currentIndex = product.images.indexOf(activeImage);
+    let newIndex = currentIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % product.images.length;
+    } else {
+      newIndex = (currentIndex - 1 + product.images.length) % product.images.length;
+    }
+    setActiveImage(product.images[newIndex]);
+  };
+
   const handleAddToCart = async () => {
     if (product.stock === 0) {
       toast.error('Product is out of stock');
@@ -120,13 +140,13 @@ const ProductDetails = () => {
     if (!isAuthenticated) {
       const guestCart = localStorage.getItem('guest_cart');
       let items = guestCart ? JSON.parse(guestCart) : [];
-      const existsIdx = items.findIndex(item => item.product._id === product._id);
+      const existsIdx = items.findIndex(item => item.product._id === product._id && (item.color || '') === selectedColor);
       
       if (existsIdx > -1) {
         const currentQty = items[existsIdx].quantity;
         if (currentQty + quantity <= product.stock) {
           items[existsIdx].quantity += quantity;
-          toast.success(`Increased ${product.name} quantity in bag!`);
+          toast.success(`Increased ${product.name} (${selectedColor || 'Standard'}) quantity in bag!`);
         } else {
           toast.error(`Only ${product.stock} items available in stock`);
           return;
@@ -135,9 +155,10 @@ const ProductDetails = () => {
         items.push({
           _id: `GUEST_ITEM_${Math.random().toString(36).substring(2, 9)}`,
           product: product,
-          quantity: quantity
+          quantity: quantity,
+          color: selectedColor
         });
-        toast.success(`${product.name} added to bag!`);
+        toast.success(`${product.name} (${selectedColor || 'Standard'}) added to bag!`);
       }
       localStorage.setItem('guest_cart', JSON.stringify(items));
       dispatch(setCart({ items }));
@@ -147,10 +168,11 @@ const ProductDetails = () => {
     try {
       const response = await api.post('/cart', {
         product: product._id,
-        quantity
+        quantity,
+        color: selectedColor
       });
       dispatch(setCart(response.data.cart));
-      toast.success(`${product.name} added to bag!`);
+      toast.success(`${product.name} (${selectedColor || 'Standard'}) added to bag!`);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error adding to bag');
     }
@@ -337,11 +359,33 @@ const ProductDetails = () => {
             ) : isVideoUrl(activeImage) ? (
               renderVideoPlayer(activeImage)
             ) : (
-              <img
-                src={getImageUrl(activeImage)}
-                alt={product.name}
-                className="h-full w-full object-cover zoom-image"
-              />
+              <div className="relative h-full w-full group">
+                <img
+                  src={getImageUrl(activeImage)}
+                  alt={product.name}
+                  className="h-full w-full object-cover zoom-image"
+                />
+                {product.images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => handleImageNav('prev')}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/45 text-white p-2 hover:bg-black/80 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 flex items-center justify-center cursor-pointer z-10 rounded-full"
+                      aria-label="Previous Image"
+                    >
+                      <FiChevronLeft className="text-lg" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleImageNav('next')}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/45 text-white p-2 hover:bg-black/80 transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 flex items-center justify-center cursor-pointer z-10 rounded-full"
+                      aria-label="Next Image"
+                    >
+                      <FiChevronRight className="text-lg" />
+                    </button>
+                  </>
+                )}
+              </div>
             )}
             {product.discountPrice > 0 && product.price > 0 && (
               <span className="absolute top-4 right-4 z-25 bg-luxury-black text-white border border-luxury-gold/50 text-[10px] font-bold px-2 py-1 uppercase tracking-wider">
@@ -382,7 +426,7 @@ const ProductDetails = () => {
                 <span className="text-[8px] uppercase tracking-wider font-semibold">Play Video</span>
               </button>
             )}
-            {product.images.length >= 2 && (
+            {product.images.length >= 4 && (
               <button
                 onClick={() => {
                   setIs360Mode(true);
@@ -493,6 +537,29 @@ const ProductDetails = () => {
           ) : (
             product.stock > 0 && (
               <div className="space-y-4 pt-4 font-sans text-xs">
+                {/* Color Selector */}
+                {product.colors && product.colors.length > 0 && (
+                  <div className="space-y-3 pb-2 border-b border-luxury-gold/10 font-sans">
+                    <span className="font-semibold uppercase tracking-wider text-luxury-gray text-xs block">Choose Color:</span>
+                    <div className="flex flex-wrap gap-2.5">
+                      {product.colors.map((colorName) => (
+                        <button
+                          key={colorName}
+                          type="button"
+                          onClick={() => setSelectedColor(colorName)}
+                          className={`px-4 py-2 border text-[10px] tracking-wider uppercase font-bold transition-all duration-200 cursor-pointer ${
+                            selectedColor === colorName
+                              ? 'border-luxury-gold bg-luxury-black text-white'
+                              : 'border-luxury-gold/25 text-luxury-gray hover:border-luxury-gold/50 bg-white'
+                          }`}
+                        >
+                          {colorName}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center space-x-6">
                   <span className="font-semibold uppercase tracking-wider text-luxury-gray">Quantity:</span>
                   <div className="flex items-center border border-luxury-gold/20 bg-white">

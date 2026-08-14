@@ -264,9 +264,16 @@ const OrderHistory = () => {
                                   className="h-12 w-12 object-cover border border-luxury-gold/10 bg-white"
                                 />
                                 <div>
-                                  <h5 className="font-semibold text-luxury-black uppercase tracking-wide truncate max-w-[200px]">
-                                    {item.name}
-                                  </h5>
+                                  <div className="flex items-center gap-2">
+                                    <h5 className="font-semibold text-luxury-black uppercase tracking-wide truncate max-w-[200px]">
+                                      {item.name}
+                                    </h5>
+                                    {item.color && (
+                                      <span className="text-[8px] bg-luxury-gold/15 text-luxury-gold px-1.5 py-0.5 border border-luxury-gold/25 uppercase font-bold rounded font-sans">
+                                        {item.color}
+                                      </span>
+                                    )}
+                                  </div>
                                   <p className="text-luxury-gray text-[9px]">
                                     QTY: {item.quantity} | {formatPrice(item.price, currentCurrency, exchangeRate)}
                                   </p>

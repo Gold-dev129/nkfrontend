@@ -178,7 +178,19 @@ const AdminOrders = () => {
                     return (
                       <tr key={order._id} className="border-b border-luxury-gold/5 hover:bg-luxury-gold/5 transition-colors">
                         <td className="py-3 px-4 font-mono font-semibold text-luxury-black">
-                          {order.orderId || `${order._id.substring(0, 8)}...`}
+                          <div>{order.orderId || `${order._id.substring(0, 8)}...`}</div>
+                          <div className="text-[10px] text-luxury-gray mt-2 font-sans font-normal uppercase tracking-wider space-y-1">
+                            {order.orderItems && order.orderItems.map((item, idx) => (
+                              <div key={idx} className="border-b border-dashed border-luxury-gold/10 pb-0.5 last:border-0 last:pb-0">
+                                <span className="font-semibold text-luxury-black">{item.name}</span> (x{item.quantity})
+                                {item.color && (
+                                  <span className="ml-1 text-[8px] bg-luxury-gold/15 text-luxury-gold px-1.5 py-0.5 border border-luxury-gold/35 rounded font-bold">
+                                    {item.color}
+                                  </span>
+                                )}
+                              </div>
+                            ))}
+                          </div>
                         </td>
                         <td className="py-3 px-4 text-slate-500 font-medium">
                           {new Date(order.createdAt).toLocaleDateString(undefined, {
